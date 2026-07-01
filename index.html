@@ -250,11 +250,11 @@
     </div>
 
     <div class="card">
-      <h2>資料與備份</h2>
-      <div class="sub">資料只存在這台裝置。定期匯出以免遺失。</div>
+      <h2>備份與還原</h2>
+      <div class="sub">資料只存在這台裝置。建議偶爾下載備份,換手機或清除瀏覽器時才不會不見。</div>
       <div class="mini-row" style="margin-bottom:10px">
-        <button class="btn ghost" id="exportBtn">匯出 JSON</button>
-        <button class="btn line" id="importBtn">匯入 JSON</button>
+        <button class="btn ghost" id="exportBtn">下載備份</button>
+        <button class="btn line" id="importBtn">讀取備份</button>
       </div>
       <button class="btn line" id="resetBtn" style="color:var(--emotion)">清除所有資料</button>
       <input type="file" id="importFile" accept="application/json" style="display:none">
@@ -288,7 +288,7 @@
       <div id="leakList"></div>
       <input type="text" id="reviewNote" placeholder="本週反思：哪個時段狀態最好？下週想調整什麼？" maxlength="120" style="margin-top:14px">
       <button class="btn" id="saveReviewBtn">儲存本週檢討</button>
-      <button class="btn ghost" id="copyMdBtn" style="margin-top:8px">複製為 Markdown（貼進筆記）</button>
+      <button class="btn ghost" id="copyMdBtn" style="margin-top:8px">複製本週摘要（貼到筆記）</button>
     </div>
     <div class="card">
       <h2>過往檢討</h2>
@@ -627,10 +627,10 @@ $('#saveReviewBtn').addEventListener('click', ()=>{
 });
 $('#copyMdBtn').addEventListener('click', ()=>{
   const r=curReview();
-  const done=RECOVERY.filter((_,i)=>r.recovery[i]).map(x=>'- [x] '+x.t);
-  const undone=RECOVERY.filter((_,i)=>!r.recovery[i]).map(x=>'- [ ] '+x.t);
-  const md=`## 能量週檢討 ${curWeek}（${weekRange(curWeek)})\n\n### 恢復節奏\n${[...done,...undone].join('\n')||'—'}\n\n### 能量漏損\n${r.leaks.length? r.leaks.map(l=>'- '+l).join('\n'):'（本週無明顯漏損）'}\n\n### 反思\n${r.note||'—'}\n`;
-  navigator.clipboard?.writeText(md).then(()=>toast('已複製 Markdown'),()=>toast('複製失敗，請手動'));
+  const done=RECOVERY.filter((_,i)=>r.recovery[i]).map(x=>'✓ '+x.t);
+  const undone=RECOVERY.filter((_,i)=>!r.recovery[i]).map(x=>'✗ '+x.t);
+  const md=`能量週檢討 ${curWeek}（${weekRange(curWeek)}）\n\n【恢復節奏】\n${[...done,...undone].join('\n')||'—'}\n\n【能量漏損】\n${r.leaks.length? r.leaks.map(l=>'・'+l).join('\n'):'（本週無明顯漏損）'}\n\n【本週反思】\n${r.note||'—'}\n`;
+  navigator.clipboard?.writeText(md).then(()=>toast('已複製,可貼到筆記 ✓'),()=>toast('複製失敗'));
 });
 function renderPast(){
   const keys=Object.keys(reviews).filter(k=>reviews[k].savedAt).sort().reverse();
@@ -652,7 +652,7 @@ $('#exportBtn').addEventListener('click', ()=>{
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download=`能量儀表板備份_${ymd(new Date())}.json`; a.click(); URL.revokeObjectURL(a.href);
-  toast('已匯出');
+  toast('備份已下載 ✓');
 });
 $('#importBtn').addEventListener('click', ()=>$('#importFile').click());
 $('#importFile').addEventListener('change', e=>{
@@ -662,12 +662,12 @@ $('#importFile').addEventListener('change', e=>{
     const d=JSON.parse(reader.result);
     if(d.checkins) checkins=d.checkins; if(d.tasks) tasks=d.tasks; if(d.reviews) reviews=d.reviews;
     DB.set('checkins',checkins); DB.set('tasks',tasks); DB.set('reviews',reviews);
-    renderAll(); toast('已匯入 ✓');
-  }catch(err){ toast('檔案格式錯誤'); } };
+    renderAll(); toast('已還原 ✓');
+  }catch(err){ toast('這不是有效的備份檔'); } };
   reader.readAsText(f); e.target.value='';
 });
 $('#resetBtn').addEventListener('click', ()=>{
-  if(confirm('確定要清除所有能量紀錄、任務與檢討嗎？此動作無法復原。建議先匯出備份。')){
+  if(confirm('確定要清除所有能量紀錄、任務與檢討嗎？此動作無法復原。建議先下載備份。')){
     checkins=[]; tasks=[]; reviews={};
     DB.set('checkins',[]); DB.set('tasks',[]); DB.set('reviews',{});
     renderAll(); toast('已清除');
