@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="能量儀表板">
+<meta name="theme-color" content="#6366f1">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%236366f1'/%3E%3Cpath d='M98 34 52 100h30l-8 46 54-70H96z' fill='%23fff'/%3E%3C/svg%3E">
+<title>能量儀表板 · Energy First</title>
+<style>
+  :root{
+    --bg:#f5f6fb; --card:#ffffff; --text:#1c1f2b; --muted:#6b7280; --border:#e7e9f2;
+    --primary:#6366f1; --primary-soft:#eef0ff; --shadow:0 1px 3px rgba(20,23,45,.06),0 6px 20px rgba(20,23,45,.05);
+    --body:#10b981; --focus:#3b82f6; --emotion:#f43f5e; --meaning:#f59e0b;
+    --primary-rgb:99,102,241;
+  }
+  html[data-theme="dark"]{
+    --bg:#0e1016; --card:#181b24; --text:#e7e9f0; --muted:#98a0b3; --border:#262a37;
+    --primary:#818cf8; --primary-soft:#20233a; --shadow:0 1px 3px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.35);
+    --primary-rgb:129,140,248;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(76px + env(safe-area-inset-bottom));
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:14px 16px}
+  /* Header */
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+  .head{max-width:680px;margin:0 auto;padding:12px 16px calc(12px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brand{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .brand h1{font-size:17px;margin:0;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:7px}
+  .brand .bolt{color:var(--primary)}
+  .brand small{color:var(--muted);font-size:11.5px;font-weight:500}
+  .icon-btn{border:1px solid var(--border);background:var(--card);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:17px;cursor:pointer;display:grid;place-items:center;flex:none}
+  .icon-btn:active{transform:scale(.94)}
+  /* Cards */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+  .card h2{font-size:15px;margin:0 0 4px;font-weight:800}
+  .card .sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+  .card h2 + .sub{margin-top:-2px}
+  /* Tabs / sections */
+  section.tab{display:none;animation:fade .25s ease}
+  section.tab.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  /* Bottom tabbar */
+  nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--card) 92%,transparent);backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+  .tabbar-inner{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+  .tabbtn{border:none;background:none;color:var(--muted);padding:7px 2px 5px;border-radius:12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:600;transition:color .15s}
+  .tabbtn .ti{font-size:20px;line-height:1}
+  .tabbtn.active{color:var(--primary)}
+  .tabbtn.active .ti{transform:translateY(-1px)}
+  /* Ring */
+  .ring-row{display:flex;align-items:center;gap:18px}
+  .ring{--pct:0;width:96px;height:96px;border-radius:50%;flex:none;display:grid;place-items:center;
+    background:conic-gradient(var(--primary) calc(var(--pct)*1%), var(--primary-soft) 0)}
+  .ring .inner{width:76px;height:76px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center}
+  .ring .num{font-size:26px;font-weight:800;line-height:1}
+  .ring .lbl{font-size:10px;color:var(--muted)}
+  .ring-msg{flex:1;min-width:0}
+  .ring-msg .big{font-weight:700;font-size:15px}
+  .ring-msg .small{color:var(--muted);font-size:12.5px}
+  /* Rating */
+  .rate-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--border)}
+  .rate-row:first-child{border-top:none;padding-top:2px}
+  .rate-label{display:flex;align-items:center;gap:10px;min-width:0}
+  .rate-label .emoji{font-size:22px;width:26px;text-align:center}
+  .rname{font-weight:700;font-size:14px}
+  .rdesc{color:var(--muted);font-size:11px}
+  .dots{display:flex;gap:6px;flex:none}
+  .dot{width:32px;height:32px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:.12s}
+  .dot:active{transform:scale(.9)}
+  .dot.on{background:var(--c);border-color:var(--c);color:#fff}
+  /* Buttons */
+  .btn{width:100%;border:none;border-radius:14px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;background:var(--primary);color:#fff;transition:.12s}
+  .btn:active{transform:scale(.98);filter:brightness(.96)}
+  .btn.ghost{background:var(--primary-soft);color:var(--primary)}
+  .btn.line{background:transparent;border:1px solid var(--border);color:var(--text)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .note-input,select,input[type=text]{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:12px;padding:11px 13px;font-size:14px;font-family:inherit;margin-bottom:12px;outline:none}
+  .note-input:focus,select:focus,input[type=text]:focus{border-color:var(--primary)}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 8l3-3.5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
+  /* Suggestion */
+  .suggest{border-radius:14px;padding:14px;border:1px solid var(--border)}
+  .suggest .stitle{font-weight:800;font-size:15px;margin-bottom:2px}
+  .suggest .stext{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px}
+  .chip{font-size:12.5px;padding:6px 11px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-weight:600}
+  /* Timer */
+  .timer-face{text-align:center;padding:6px 0 10px}
+  .timer-mode{font-size:12px;font-weight:700;color:var(--primary);letter-spacing:1px}
+  .timer-time{font-size:52px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px;line-height:1.1;margin:2px 0}
+  .timer-ctrl{display:flex;gap:8px}
+  .presets{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+  .preset{font-size:12px;padding:5px 12px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-weight:600}
+  .preset.on{background:var(--primary-soft);color:var(--primary);border-color:transparent}
+  /* Log list */
+  .log{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border)}
+  .log:first-child{border-top:none}
+  .log .time{font-weight:700;font-size:13px;width:52px;flex:none;font-variant-numeric:tabular-nums}
+  .log .vals{display:flex;gap:5px;flex-wrap:wrap;flex:1}
+  .vtag{font-size:11px;padding:2px 7px;border-radius:7px;font-weight:700;color:#fff}
+  .log .del{margin-left:auto;color:var(--muted);background:none;border:none;cursor:pointer;font-size:16px;padding:4px;flex:none}
+  .lognote{font-size:12px;color:var(--muted);margin-top:-4px;padding:0 0 8px 62px}
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
+  .stat .n{font-size:24px;font-weight:800;line-height:1}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:4px}
+  /* Energy selector chips */
+  .eselect{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+  .echip{white-space:nowrap;font-size:12.5px;padding:7px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-weight:600;flex:none}
+  .echip.on{color:#fff;border-color:transparent}
+  /* Heatmap */
+  .heat{display:grid;grid-template-columns:30px repeat(7,minmax(0,1fr));gap:3px}
+  .hcell{border-radius:6px;min-height:36px;display:grid;place-items:center;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;overflow:hidden}
+  .hcell.head{background:transparent;color:var(--muted);font-size:11px;font-weight:600;min-height:18px}
+  .hcell.rowlab{background:transparent;color:var(--muted);font-size:10.5px;font-weight:600;justify-content:flex-end;padding-right:3px;letter-spacing:-.5px}
+  .hcell.empty{background:var(--bg);border:1px dashed var(--border);color:transparent}
+  .hcell.gold{box-shadow:0 0 0 2px var(--meaning),0 0 0 4px color-mix(in srgb,var(--meaning) 30%,transparent)}
+  .golden-note{margin-top:12px;font-size:13px;background:var(--primary-soft);color:var(--primary);border-radius:12px;padding:11px 13px;font-weight:600}
+  /* Trend */
+  .trend{width:100%;height:120px;display:block}
+  .empty-hint{color:var(--muted);font-size:13px;text-align:center;padding:24px 8px}
+  /* Tasks */
+  .taskitem{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid var(--border)}
+  .taskitem:first-child{border-top:none}
+  .tcheck{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);background:transparent;cursor:pointer;flex:none;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800}
+  .tcheck.on{border-color:var(--primary);background:var(--primary)}
+  .ttitle{flex:1;font-size:14px;min-width:0;word-break:break-word}
+  .taskitem.done .ttitle{text-decoration:line-through;color:var(--muted)}
+  .tbadge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;color:#fff;flex:none}
+  .tdel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:4px;flex:none}
+  .group-lab{font-size:12px;font-weight:800;color:var(--muted);margin:14px 0 2px;display:flex;align-items:center;gap:7px}
+  .group-lab .swatch{width:9px;height:9px;border-radius:3px}
+  /* Checklist */
+  .check-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:1px solid var(--border);cursor:pointer}
+  .check-item:first-child{border-top:none}
+  .cbox{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);flex:none;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800;margin-top:1px}
+  .check-item.on .cbox{background:var(--primary);border-color:var(--primary)}
+  .check-item.leak.on .cbox{background:var(--emotion);border-color:var(--emotion)}
+  .clabel{font-size:14px}
+  .clabel small{display:block;color:var(--muted);font-size:11.5px}
+  /* Past reviews / details */
+  details{border:1px solid var(--border);border-radius:14px;padding:0 14px;margin-bottom:10px;background:var(--card)}
+  details summary{cursor:pointer;padding:13px 0;font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  details summary::-webkit-details-marker{display:none}
+  details summary::after{content:"⌄";color:var(--muted);font-size:18px}
+  details[open] summary::after{content:"⌃"}
+  details .body{padding:0 0 14px;font-size:13px;color:var(--muted)}
+  .mini-row{display:flex;gap:8px}
+  .mini-row .btn{padding:10px}
+  /* Toast */
+  .toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:600;opacity:0;transition:.3s;z-index:60;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .foot{text-align:center;color:var(--muted);font-size:11px;padding:8px 0 4px;line-height:1.7}
+</style>
+</head>
+<body>
+<header>
+  <div class="head">
+    <div class="brand">
+      <h1><span class="bolt">⚡</span>能量儀表板</h1>
+      <small id="dateLabel">能量管理優先於時間管理</small>
+    </div>
+    <button class="icon-btn" id="themeBtn" title="切換深淺色">🌙</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== 打卡 ===== -->
+  <section class="tab active" id="tab-checkin">
+    <div class="card">
+      <div class="ring-row">
+        <div class="ring" id="compRing" style="--pct:0">
+          <div class="inner"><div><div class="num" id="compVal">–</div><div class="lbl">綜合能量</div></div></div>
+        </div>
+        <div class="ring-msg" id="ringMsg">
+          <div class="big">此刻感覺如何？</div>
+          <div class="small">花 10 秒，幫四種能量打個分。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>記錄此刻能量</h2>
+      <div class="sub">1＝很低　5＝很高。誠實就好。</div>
+      <div id="ratingWrap"></div>
+      <input type="text" class="note-input" id="noteInput" placeholder="（可選）現在在做什麼／感覺是什麼？" maxlength="60">
+      <button class="btn" id="saveCheckinBtn">記錄此刻</button>
+    </div>
+
+    <div class="card">
+      <h2>現在適合做什麼</h2>
+      <div class="sub">依你最近一次的能量狀態自動建議</div>
+      <div class="suggest" id="suggestBox"></div>
+    </div>
+
+    <div class="card">
+      <h2>專注節奏</h2>
+      <div class="sub">工作一段落就休息，別硬撐（做法三）</div>
+      <div class="presets" id="presets">
+        <button class="preset on" data-f="90" data-b="15">90 · 15</button>
+        <button class="preset" data-f="50" data-b="10">50 · 10</button>
+        <button class="preset" data-f="25" data-b="5">25 · 5</button>
+      </div>
+      <div class="timer-face">
+        <div class="timer-mode" id="timerMode">專注時段</div>
+        <div class="timer-time" id="timerTime">90:00</div>
+      </div>
+      <div class="timer-ctrl">
+        <button class="btn" id="timerStart" style="flex:2">開始</button>
+        <button class="btn line" id="timerReset" style="flex:1">重設</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>今日紀錄</h2>
+      <div class="sub" id="todayCount">尚無紀錄</div>
+      <div id="todayList"></div>
+    </div>
+  </section>
+
+  <!-- ===== 儀表板 ===== -->
+  <section class="tab" id="tab-dashboard">
+    <div class="stats">
+      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">總打卡</div></div>
+      <div class="stat"><div class="n" id="statAvg">–</div><div class="l">平均綜合</div></div>
+      <div class="stat"><div class="n" id="statStreak">0</div><div class="l">連續天數</div></div>
+    </div>
+
+    <div class="card">
+      <h2>你的能量節律</h2>
+      <div class="sub">時段 × 星期的平均能量，找出屬於你的黃金時段</div>
+      <div class="eselect" id="energySelect"></div>
+      <div class="heat" id="heatmap"></div>
+      <div class="golden-note" id="goldenNote"></div>
+    </div>
+
+    <div class="card">
+      <h2>近 14 天趨勢</h2>
+      <div class="sub">每日綜合能量平均</div>
+      <div id="trendWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2>資料與備份</h2>
+      <div class="sub">資料只存在這台裝置。定期匯出以免遺失。</div>
+      <div class="mini-row" style="margin-bottom:10px">
+        <button class="btn ghost" id="exportBtn">匯出 JSON</button>
+        <button class="btn line" id="importBtn">匯入 JSON</button>
+      </div>
+      <button class="btn line" id="resetBtn" style="color:var(--emotion)">清除所有資料</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none">
+    </div>
+  </section>
+
+  <!-- ===== 任務 ===== -->
+  <section class="tab" id="tab-tasks">
+    <div class="card">
+      <h2>依能量分類任務</h2>
+      <div class="sub">先標好任務要花多少能量，打卡時系統就會幫你配對（做法二）</div>
+      <input type="text" id="taskInput" placeholder="輸入一個任務…" maxlength="80">
+      <select id="taskLevel"></select>
+      <button class="btn" id="addTaskBtn">加入任務</button>
+    </div>
+    <div class="card">
+      <h2>任務清單</h2>
+      <div id="taskList"></div>
+    </div>
+  </section>
+
+  <!-- ===== 檢討 ===== -->
+  <section class="tab" id="tab-review">
+    <div class="card">
+      <h2>本週檢討</h2>
+      <div class="sub" id="weekLabel"></div>
+      <h3 style="font-size:13px;margin:6px 0 2px">✅ 恢復節奏（做法三）</h3>
+      <div id="recoveryList"></div>
+      <h3 style="font-size:13px;margin:16px 0 2px">⚠️ 這週的能量漏損（做法四）</h3>
+      <div class="sub" style="margin:0 0 6px">勾選這週偷走你能量的來源</div>
+      <div id="leakList"></div>
+      <input type="text" id="reviewNote" placeholder="本週反思：哪個時段狀態最好？下週想調整什麼？" maxlength="120" style="margin-top:14px">
+      <button class="btn" id="saveReviewBtn">儲存本週檢討</button>
+      <button class="btn ghost" id="copyMdBtn" style="margin-top:8px">複製為 Markdown（貼進筆記）</button>
+    </div>
+    <div class="card">
+      <h2>過往檢討</h2>
+      <div id="pastReviews"><div class="empty-hint">還沒有紀錄</div></div>
+    </div>
+  </section>
+
+</main>
+
+<nav class="tabbar">
+  <div class="tabbar-inner">
+    <button class="tabbtn" data-tab="tasks"><span class="ti">✓</span>任務</button>
+    <button class="tabbtn active" data-tab="checkin"><span class="ti">⚡</span>打卡</button>
+    <button class="tabbtn" data-tab="dashboard"><span class="ti">📊</span>儀表板</button>
+    <button class="tabbtn" data-tab="review"><span class="ti">🗓️</span>檢討</button>
+  </div>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+"use strict";
+/* ============ 設定 ============ */
+const ENERGIES = [
+  {key:'body',    label:'身體', emoji:'💪', color:'#10b981', desc:'睡眠·營養·運動·休息'},
+  {key:'focus',   label:'專注', emoji:'🎯', color:'#3b82f6', desc:'注意力·思考·深度工作'},
+  {key:'emotion', label:'情緒', emoji:'❤️', color:'#f43f5e', desc:'壓力·心情·人際'},
+  {key:'meaning', label:'意義', emoji:'⭐', color:'#f59e0b', desc:'目標感·價值感'},
+];
+const LEVELS = [
+  {key:'high', label:'高能量 · 深度工作', color:'#8b5cf6', hint:'研究設計、論文寫作、簡報架構、策略思考、困難分析'},
+  {key:'mid',  label:'中等能量 · 推進',   color:'#3b82f6', hint:'規劃、溝通協調、一般會議'},
+  {key:'low',  label:'低能量 · 雜務',     color:'#64748b', hint:'Email、行政流程、資料整理、例行回覆'},
+];
+const BUCKETS = [
+  {key:'dawn', label:'清晨', hint:'5–8'},
+  {key:'am',   label:'上午', hint:'8–12'},
+  {key:'noon', label:'中午', hint:'12–14'},
+  {key:'pm',   label:'下午', hint:'14–18'},
+  {key:'eve',  label:'傍晚', hint:'18–21'},
+  {key:'night',label:'夜晚', hint:'21–5'},
+];
+function bucketOfHour(h){
+  if(h>=5&&h<8)return 'dawn'; if(h>=8&&h<12)return 'am'; if(h>=12&&h<14)return 'noon';
+  if(h>=14&&h<18)return 'pm'; if(h>=18&&h<21)return 'eve'; return 'night';
+}
+const WEEKDAYS = ['一','二','三','四','五','六','日'];
+const RECOVERY = [
+  {t:'工作 90 分鐘後有休息 10–15 分鐘', s:'讓專注力回充'},
+  {t:'午餐後散步 5–10 分鐘', s:'對抗午後低潮'},
+  {t:'下午低潮時處理輕量任務', s:'順著能量走'},
+  {t:'睡前減少高刺激資訊輸入', s:'保護明天的能量'},
+];
+const LEAKS = ['頻繁切換任務','手機與訊息通知','無效會議','反覆做決策','人際衝突','資訊過載','完美主義拖延'];
+
+/* ============ 儲存 ============ */
+const DB = {
+  get(k,def){ try{ const v=JSON.parse(localStorage.getItem('em_'+k)); return v==null?def:v; }catch(e){ return def; } },
+  set(k,v){ localStorage.setItem('em_'+k, JSON.stringify(v)); },
+};
+let checkins = DB.get('checkins', []);
+let tasks    = DB.get('tasks', []);
+let reviews  = DB.get('reviews', {});   // keyed by week start ymd
+
+/* ============ 工具 ============ */
+const $ = s => document.querySelector(s);
+const pad = n => String(n).padStart(2,'0');
+function ymd(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function wdIndex(d){ return (d.getDay()+6)%7; } // 0=一 … 6=日
+function mondayOf(d){ const x=new Date(d); x.setDate(x.getDate()-wdIndex(x)); x.setHours(0,0,0,0); return x; }
+function composite(c){ return (c.body+c.focus+c.emotion+c.meaning)/4; }
+function hexToRgb(h){ const n=parseInt(h.slice(1),16); return [n>>16&255,n>>8&255,n&255]; }
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1800); }
+function fmtTime(ts){ const d=new Date(ts); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+
+/* ============ 打卡分頁 ============ */
+let draft = {body:0,focus:0,emotion:0,meaning:0};
+
+function renderRating(){
+  $('#ratingWrap').innerHTML = ENERGIES.map(e=>`
+    <div class="rate-row">
+      <div class="rate-label">
+        <span class="emoji">${e.emoji}</span>
+        <div><div class="rname">${e.label}能量</div><div class="rdesc">${e.desc}</div></div>
+      </div>
+      <div class="dots" data-energy="${e.key}">
+        ${[1,2,3,4,5].map(n=>`<button class="dot" data-val="${n}" style="--c:${e.color}">${n}</button>`).join('')}
+      </div>
+    </div>`).join('');
+}
+function paintDraft(){
+  document.querySelectorAll('#ratingWrap .dots').forEach(row=>{
+    const k=row.dataset.energy, v=draft[k];
+    row.querySelectorAll('.dot').forEach(d=>d.classList.toggle('on', +d.dataset.val<=v && v>0));
+  });
+  const rated = ENERGIES.map(e=>draft[e.key]).filter(v=>v>0);
+  const avg = rated.length ? rated.reduce((a,b)=>a+b,0)/rated.length : 0;
+  setRing($('#compRing'), $('#compVal'), avg, rated.length? avg.toFixed(1):'–');
+}
+function setRing(ring, valEl, avg, text){
+  ring.style.setProperty('--pct', avg/5*100);
+  valEl.textContent = text;
+}
+$('#ratingWrap')?.addEventListener('click', e=>{
+  const dot=e.target.closest('.dot'); if(!dot) return;
+  const k=dot.closest('.dots').dataset.energy;
+  draft[k] = +dot.dataset.val;
+  paintDraft();
+});
+$('#saveCheckinBtn').addEventListener('click', ()=>{
+  if(ENERGIES.some(e=>draft[e.key]===0)){ toast('四種能量都打分才能記錄'); return; }
+  const now = Date.now();
+  checkins.push({id:now, ts:now, body:draft.body, focus:draft.focus, emotion:draft.emotion, meaning:draft.meaning, note:$('#noteInput').value.trim()});
+  DB.set('checkins', checkins);
+  draft={body:0,focus:0,emotion:0,meaning:0}; $('#noteInput').value='';
+  paintDraft(); renderToday(); renderSuggest();
+  toast('已記錄 ✓');
+});
+
+function renderToday(){
+  const today = ymd(new Date());
+  const list = checkins.filter(c=>ymd(new Date(c.ts))===today).sort((a,b)=>b.ts-a.ts);
+  $('#todayCount').textContent = list.length? `今天打了 ${list.length} 次卡` : '今天還沒打卡';
+  $('#todayList').innerHTML = list.map(c=>`
+    <div class="log">
+      <span class="time">${fmtTime(c.ts)}</span>
+      <span class="vals">${ENERGIES.map(e=>`<span class="vtag" style="background:${e.color}">${e.emoji}${c[e.key]}</span>`).join('')}</span>
+      <button class="del" data-id="${c.id}">✕</button>
+    </div>
+    ${c.note?`<div class="lognote">${escapeHtml(c.note)}</div>`:''}`).join('');
+}
+$('#todayList').addEventListener('click', e=>{
+  const b=e.target.closest('.del'); if(!b) return;
+  checkins = checkins.filter(c=>c.id!=b.dataset.id);
+  DB.set('checkins', checkins); renderToday(); renderSuggest();
+});
+function escapeHtml(s){ return s.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+
+function renderSuggest(){
+  const box=$('#suggestBox');
+  if(!checkins.length){
+    box.innerHTML=`<div class="stitle">還沒有資料</div><div class="stext">先在上面記錄此刻能量，系統就會告訴你現在適合做什麼。</div>`;
+    return;
+  }
+  const latest = checkins[checkins.length-1];
+  const avg = composite(latest);
+  const isToday = ymd(new Date(latest.ts))===ymd(new Date());
+  let level, title, text;
+  if(avg>=4){ level='high'; title='🔥 高能量狀態'; text='最珍貴的時刻。拿去做最重要的深度工作，別浪費在雜事上。'; }
+  else if(avg>=3){ level='mid'; title='🙂 中等能量'; text='適合推進型任務、規劃與一般會議。'; }
+  else { level='low'; title='🌙 低能量'; text='別硬撐深度工作。清雜務、整理，或安排一段恢復。'; }
+  const matched = tasks.filter(t=>!t.done && t.level===level);
+  const chips = matched.length
+    ? `<div class="chips">${matched.slice(0,6).map(t=>`<span class="chip">${escapeHtml(t.title)}</span>`).join('')}</div>`
+    : `<div class="stext" style="margin:0">此類別還沒有待辦任務。到「任務」分頁加幾個吧。</div>`;
+  const stamp = isToday? `最近打卡 ${fmtTime(latest.ts)}（綜合 ${avg.toFixed(1)}）` : `⚠️ 這是${ymd(new Date(latest.ts))}的舊紀錄，建議重新打卡`;
+  const lv = LEVELS.find(l=>l.key===level);
+  box.style.borderLeft = `4px solid ${lv.color}`;
+  box.innerHTML = `<div class="stitle">${title}</div><div class="stext">${text}</div>${chips}<div class="stext" style="margin:10px 0 0;font-size:11.5px">${stamp}</div>`;
+}
+
+/* ============ 專注節奏計時器 ============ */
+let timer = {focusMin:90, breakMin:15, mode:'focus', remain:90*60, running:false, iv:null};
+function timerRender(){
+  $('#timerTime').textContent = pad(Math.floor(timer.remain/60))+':'+pad(timer.remain%60);
+  $('#timerMode').textContent = timer.mode==='focus'?'專注時段':'休息時段';
+  $('#timerMode').style.color = timer.mode==='focus'?'var(--primary)':'var(--body)';
+  $('#timerStart').textContent = timer.running?'暫停':'開始';
+}
+function timerTick(){
+  timer.remain--;
+  if(timer.remain<0){
+    if(navigator.vibrate) navigator.vibrate([200,100,200]);
+    if(timer.mode==='focus'){ timer.mode='break'; timer.remain=timer.breakMin*60; toast('該休息了 ☕'); }
+    else { timer.mode='focus'; timer.remain=timer.focusMin*60; toast('回來專注 🎯'); }
+  }
+  timerRender();
+}
+$('#timerStart').addEventListener('click', ()=>{
+  timer.running=!timer.running;
+  if(timer.running){ timer.iv=setInterval(timerTick,1000); } else { clearInterval(timer.iv); }
+  timerRender();
+});
+$('#timerReset').addEventListener('click', ()=>{
+  clearInterval(timer.iv); timer.running=false; timer.mode='focus'; timer.remain=timer.focusMin*60; timerRender();
+});
+$('#presets').addEventListener('click', e=>{
+  const b=e.target.closest('.preset'); if(!b) return;
+  document.querySelectorAll('.preset').forEach(p=>p.classList.remove('on')); b.classList.add('on');
+  clearInterval(timer.iv);
+  timer.focusMin=+b.dataset.f; timer.breakMin=+b.dataset.b; timer.mode='focus'; timer.remain=timer.focusMin*60; timer.running=false;
+  timerRender();
+});
+
+/* ============ 儀表板 ============ */
+let selEnergy = 'comp';
+function renderEnergySelect(){
+  const opts = [{key:'comp',label:'綜合',color:'#6366f1'}, ...ENERGIES.map(e=>({key:e.key,label:e.label,color:e.color}))];
+  $('#energySelect').innerHTML = opts.map(o=>`<button class="echip ${o.key===selEnergy?'on':''}" data-k="${o.key}" style="${o.key===selEnergy?`background:${o.color}`:''}">${o.label}</button>`).join('');
+}
+$('#energySelect').addEventListener('click', e=>{
+  const b=e.target.closest('.echip'); if(!b) return;
+  selEnergy=b.dataset.k; renderEnergySelect(); renderHeatmap();
+});
+function valOf(c){ return selEnergy==='comp'? composite(c) : c[selEnergy]; }
+function selColor(){ return selEnergy==='comp'? '#6366f1' : ENERGIES.find(e=>e.key===selEnergy).color; }
+
+function renderStats(){
+  $('#statTotal').textContent = checkins.length;
+  $('#statAvg').textContent = checkins.length ? (checkins.reduce((a,c)=>a+composite(c),0)/checkins.length).toFixed(1) : '–';
+  // streak
+  const days = new Set(checkins.map(c=>ymd(new Date(c.ts))));
+  let streak=0; const d=new Date();
+  if(!days.has(ymd(d))) d.setDate(d.getDate()-1); // 今天沒打卡就從昨天算
+  while(days.has(ymd(d))){ streak++; d.setDate(d.getDate()-1); }
+  $('#statStreak').textContent = streak;
+}
+function renderHeatmap(){
+  const grid = {}; // bucket -> wd -> [vals]
+  BUCKETS.forEach(b=>{ grid[b.key]={}; for(let w=0;w<7;w++) grid[b.key][w]=[]; });
+  checkins.forEach(c=>{ const d=new Date(c.ts); grid[bucketOfHour(d.getHours())][wdIndex(d)].push(valOf(c)); });
+  const avgOf = arr => arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : null;
+  // find max
+  let max=-1, best=null;
+  BUCKETS.forEach(b=>{ for(let w=0;w<7;w++){ const a=avgOf(grid[b.key][w]); if(a!=null&&a>max){max=a;best={b:b.key,w}} } });
+  const [r,g,bl]=hexToRgb(selColor());
+  let html = `<div class="hcell head"></div>` + WEEKDAYS.map(w=>`<div class="hcell head">${w}</div>`).join('');
+  BUCKETS.forEach(b=>{
+    html += `<div class="hcell rowlab">${b.label}</div>`;
+    for(let w=0; w<7; w++){
+      const a=avgOf(grid[b.key][w]);
+      if(a==null){ html+=`<div class="hcell empty">·</div>`; continue; }
+      const alpha=(0.18+(a-1)/4*0.82).toFixed(2);
+      const gold = best && best.b===b.key && best.w===w && max>=3.5;
+      const txtCol = alpha>0.55?'#fff':'var(--text)';
+      html += `<div class="hcell ${gold?'gold':''}" style="background:rgba(${r},${g},${bl},${alpha});color:${txtCol}">${a.toFixed(1)}</div>`;
+    }
+  });
+  $('#heatmap').innerHTML = html;
+  const note=$('#goldenNote');
+  if(best && max>=3.5){
+    const bl2=BUCKETS.find(x=>x.key===best.b);
+    note.style.display='block';
+    note.textContent = `✨ 你的黃金時段：星期${WEEKDAYS[best.w]}的${bl2.label}（${bl2.hint}點）— 把最重要的事排在這裡。`;
+  } else if(checkins.length<3){
+    note.style.display='block'; note.textContent='多打幾次卡（不同時段），黃金時段就會浮現。';
+  } else { note.style.display='none'; }
+}
+function renderTrend(){
+  const wrap=$('#trendWrap');
+  const byDay={}; const today=new Date(); const labels=[];
+  for(let i=13;i>=0;i--){ const d=new Date(today); d.setDate(d.getDate()-i); byDay[ymd(d)]=[]; labels.push(ymd(d)); }
+  checkins.forEach(c=>{ const k=ymd(new Date(c.ts)); if(k in byDay) byDay[k].push(composite(c)); });
+  const pts = labels.map((k,i)=>{ const a=byDay[k]; return a.length?{i, v:a.reduce((x,y)=>x+y,0)/a.length}:null; }).filter(Boolean);
+  if(pts.length<2){ wrap.innerHTML=`<div class="empty-hint">資料還太少，多打幾天卡就會出現趨勢線。</div>`; return; }
+  const W=600,H=120,padX=8,padY=14;
+  const x=i=>padX+(i/13)*(W-padX*2);
+  const y=v=>H-padY-((v-1)/4)*(H-padY*2);
+  const line=pts.map(p=>`${x(p.i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
+  const dots=pts.map(p=>`<circle cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="3.5" fill="var(--primary)"/>`).join('');
+  const grid=[1,2,3,4,5].map(v=>`<line x1="${padX}" x2="${W-padX}" y1="${y(v)}" y2="${y(v)}" stroke="var(--border)" stroke-width="1"/>`).join('');
+  wrap.innerHTML=`<svg class="trend" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<polyline points="${line}" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}</svg>`;
+}
+function renderDashboard(){ renderStats(); renderEnergySelect(); renderHeatmap(); renderTrend(); }
+
+/* ============ 任務 ============ */
+function initTaskSelect(){ $('#taskLevel').innerHTML = LEVELS.map(l=>`<option value="${l.key}">${l.label}</option>`).join(''); }
+$('#addTaskBtn').addEventListener('click', ()=>{
+  const title=$('#taskInput').value.trim(); if(!title){ toast('先輸入任務內容'); return; }
+  tasks.push({id:Date.now(), title, level:$('#taskLevel').value, done:false});
+  DB.set('tasks', tasks); $('#taskInput').value=''; renderTasks(); renderSuggest(); toast('已加入');
+});
+$('#taskInput').addEventListener('keydown', e=>{ if(e.key==='Enter') $('#addTaskBtn').click(); });
+function renderTasks(){
+  const list=$('#taskList');
+  if(!tasks.length){ list.innerHTML=`<div class="empty-hint">還沒有任務。加幾個，並標好它需要多少能量。</div>`; return; }
+  let html='';
+  LEVELS.forEach(l=>{
+    const items=tasks.filter(t=>t.level===l.key);
+    if(!items.length) return;
+    html+=`<div class="group-lab"><span class="swatch" style="background:${l.color}"></span>${l.label}　<span style="color:var(--muted);font-weight:500">${l.hint}</span></div>`;
+    items.sort((a,b)=>a.done-b.done);
+    items.forEach(t=>{
+      html+=`<div class="taskitem ${t.done?'done':''}">
+        <button class="tcheck ${t.done?'on':''}" data-id="${t.id}">${t.done?'✓':''}</button>
+        <span class="ttitle">${escapeHtml(t.title)}</span>
+        <button class="tdel" data-del="${t.id}">✕</button>
+      </div>`;
+    });
+  });
+  list.innerHTML=html;
+}
+$('#taskList').addEventListener('click', e=>{
+  const chk=e.target.closest('.tcheck'); const del=e.target.closest('.tdel');
+  if(chk){ const t=tasks.find(t=>t.id==chk.dataset.id); t.done=!t.done; DB.set('tasks',tasks); renderTasks(); renderSuggest(); }
+  if(del){ tasks=tasks.filter(t=>t.id!=del.dataset.del); DB.set('tasks',tasks); renderTasks(); renderSuggest(); }
+});
+
+/* ============ 每週檢討 ============ */
+let curWeek = ymd(mondayOf(new Date()));
+function weekRange(mondayYmd){
+  const m=new Date(mondayYmd); const s=new Date(m); const e=new Date(m); e.setDate(e.getDate()+6);
+  return `${s.getMonth()+1}/${s.getDate()} – ${e.getMonth()+1}/${e.getDate()}`;
+}
+function curReview(){ return reviews[curWeek] || {recovery:Array(RECOVERY.length).fill(false), leaks:[], note:''}; }
+function renderReview(){
+  $('#weekLabel').textContent = `${curWeek}（週一起）· ${weekRange(curWeek)}`;
+  const r=curReview();
+  $('#recoveryList').innerHTML = RECOVERY.map((x,i)=>`
+    <div class="check-item ${r.recovery[i]?'on':''}" data-rec="${i}">
+      <div class="cbox">${r.recovery[i]?'✓':''}</div>
+      <div class="clabel">${x.t}<small>${x.s}</small></div>
+    </div>`).join('');
+  $('#leakList').innerHTML = LEAKS.map(l=>`
+    <div class="check-item leak ${r.leaks.includes(l)?'on':''}" data-leak="${l}">
+      <div class="cbox">${r.leaks.includes(l)?'✓':''}</div>
+      <div class="clabel">${l}</div>
+    </div>`).join('');
+  $('#reviewNote').value = r.note||'';
+  renderPast();
+}
+$('#recoveryList').addEventListener('click', e=>{
+  const it=e.target.closest('[data-rec]'); if(!it) return;
+  const r=curReview(); r.recovery[+it.dataset.rec]=!r.recovery[+it.dataset.rec];
+  reviews[curWeek]=r; renderReview();
+});
+$('#leakList').addEventListener('click', e=>{
+  const it=e.target.closest('[data-leak]'); if(!it) return;
+  const r=curReview(); const l=it.dataset.leak;
+  r.leaks = r.leaks.includes(l)? r.leaks.filter(x=>x!==l) : [...r.leaks, l];
+  reviews[curWeek]=r; renderReview();
+});
+$('#saveReviewBtn').addEventListener('click', ()=>{
+  const r=curReview(); r.note=$('#reviewNote').value.trim(); r.savedAt=Date.now();
+  reviews[curWeek]=r; DB.set('reviews', reviews); renderPast(); toast('本週檢討已儲存 ✓');
+});
+$('#copyMdBtn').addEventListener('click', ()=>{
+  const r=curReview();
+  const done=RECOVERY.filter((_,i)=>r.recovery[i]).map(x=>'- [x] '+x.t);
+  const undone=RECOVERY.filter((_,i)=>!r.recovery[i]).map(x=>'- [ ] '+x.t);
+  const md=`## 能量週檢討 ${curWeek}（${weekRange(curWeek)})\n\n### 恢復節奏\n${[...done,...undone].join('\n')||'—'}\n\n### 能量漏損\n${r.leaks.length? r.leaks.map(l=>'- '+l).join('\n'):'（本週無明顯漏損）'}\n\n### 反思\n${r.note||'—'}\n`;
+  navigator.clipboard?.writeText(md).then(()=>toast('已複製 Markdown'),()=>toast('複製失敗，請手動'));
+});
+function renderPast(){
+  const keys=Object.keys(reviews).filter(k=>reviews[k].savedAt).sort().reverse();
+  const box=$('#pastReviews');
+  if(!keys.length){ box.innerHTML=`<div class="empty-hint">還沒有紀錄</div>`; return; }
+  box.innerHTML=keys.map(k=>{
+    const r=reviews[k]; const rec=r.recovery.filter(Boolean).length;
+    return `<details><summary>${k} · ${weekRange(k)}<span style="color:var(--muted);font-weight:500;font-size:12px">恢復 ${rec}/${RECOVERY.length}</span></summary>
+      <div class="body">
+        ${r.leaks.length?`漏損：${r.leaks.join('、')}<br>`:''}
+        ${r.note?`反思：${escapeHtml(r.note)}`:'（無反思）'}
+      </div></details>`;
+  }).join('');
+}
+
+/* ============ 資料備份 ============ */
+$('#exportBtn').addEventListener('click', ()=>{
+  const data={checkins,tasks,reviews,exportedAt:new Date().toISOString(),app:'能量儀表板'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`能量儀表板備份_${ymd(new Date())}.json`; a.click(); URL.revokeObjectURL(a.href);
+  toast('已匯出');
+});
+$('#importBtn').addEventListener('click', ()=>$('#importFile').click());
+$('#importFile').addEventListener('change', e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ try{
+    const d=JSON.parse(reader.result);
+    if(d.checkins) checkins=d.checkins; if(d.tasks) tasks=d.tasks; if(d.reviews) reviews=d.reviews;
+    DB.set('checkins',checkins); DB.set('tasks',tasks); DB.set('reviews',reviews);
+    renderAll(); toast('已匯入 ✓');
+  }catch(err){ toast('檔案格式錯誤'); } };
+  reader.readAsText(f); e.target.value='';
+});
+$('#resetBtn').addEventListener('click', ()=>{
+  if(confirm('確定要清除所有能量紀錄、任務與檢討嗎？此動作無法復原。建議先匯出備份。')){
+    checkins=[]; tasks=[]; reviews={};
+    DB.set('checkins',[]); DB.set('tasks',[]); DB.set('reviews',{});
+    renderAll(); toast('已清除');
+  }
+});
+
+/* ============ 分頁切換 ============ */
+function showTab(name){
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.toggle('active', x.dataset.tab===name));
+  document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  if(name==='dashboard') renderDashboard();
+  if(name==='review'){ curWeek=ymd(mondayOf(new Date())); renderReview(); }
+  window.scrollTo(0,0);
+}
+document.querySelector('.tabbar-inner').addEventListener('click', e=>{
+  const b=e.target.closest('.tabbtn'); if(!b) return;
+  showTab(b.dataset.tab);
+});
+
+/* ============ 主題 ============ */
+function applyTheme(t){ document.documentElement.setAttribute('data-theme',t); $('#themeBtn').textContent=t==='dark'?'☀️':'🌙'; DB.set('theme',t); }
+$('#themeBtn').addEventListener('click', ()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
+
+/* ============ 初始化 ============ */
+function renderAll(){ renderToday(); renderSuggest(); renderTasks(); renderDashboard(); renderReview(); }
+function init(){
+  const savedTheme=DB.get('theme', matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
+  applyTheme(savedTheme);
+  const now=new Date();
+  $('#dateLabel').textContent = `${now.getMonth()+1}月${now.getDate()}日 星期${WEEKDAYS[wdIndex(now)]} · 能量優先於時間`;
+  renderRating(); paintDraft();
+  initTaskSelect();
+  timerRender();
+  renderAll();
+  // 聰明落點:第一次(尚無打卡資料)開在「任務」流程起點;之後每天開在「打卡」
+  showTab(checkins.length===0 ? 'tasks' : 'checkin');
+}
+init();
+</script>
+</body>
+</html>
