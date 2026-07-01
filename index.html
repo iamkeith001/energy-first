@@ -283,7 +283,7 @@
       <div class="sub" id="weekLabel"></div>
       <h3 style="font-size:13px;margin:6px 0 2px">✅ 恢復節奏（做法三）</h3>
       <div id="recoveryList"></div>
-      <h3 style="font-size:13px;margin:16px 0 2px">⚠️ 這週的能量漏損（做法四）</h3>
+      <h3 style="font-size:13px;margin:16px 0 2px">⚠️ 這週的能量小偷（做法四）</h3>
       <div class="sub" style="margin:0 0 6px">勾選這週偷走你能量的來源</div>
       <div id="leakList"></div>
       <input type="text" id="reviewNote" placeholder="本週反思：哪個時段狀態最好？下週想調整什麼？" maxlength="120" style="margin-top:14px">
@@ -629,7 +629,7 @@ $('#copyMdBtn').addEventListener('click', ()=>{
   const r=curReview();
   const done=RECOVERY.filter((_,i)=>r.recovery[i]).map(x=>'✓ '+x.t);
   const undone=RECOVERY.filter((_,i)=>!r.recovery[i]).map(x=>'✗ '+x.t);
-  const md=`能量週檢討 ${curWeek}（${weekRange(curWeek)}）\n\n【恢復節奏】\n${[...done,...undone].join('\n')||'—'}\n\n【能量漏損】\n${r.leaks.length? r.leaks.map(l=>'・'+l).join('\n'):'（本週無明顯漏損）'}\n\n【本週反思】\n${r.note||'—'}\n`;
+  const md=`能量週檢討 ${curWeek}（${weekRange(curWeek)}）\n\n【恢復節奏】\n${[...done,...undone].join('\n')||'—'}\n\n【能量小偷】\n${r.leaks.length? r.leaks.map(l=>'・'+l).join('\n'):'（本週沒有能量小偷）'}\n\n【本週反思】\n${r.note||'—'}\n`;
   navigator.clipboard?.writeText(md).then(()=>toast('已複製,可貼到筆記 ✓'),()=>toast('複製失敗'));
 });
 function renderPast(){
@@ -640,7 +640,7 @@ function renderPast(){
     const r=reviews[k]; const rec=r.recovery.filter(Boolean).length;
     return `<details><summary>${k} · ${weekRange(k)}<span style="color:var(--muted);font-weight:500;font-size:12px">恢復 ${rec}/${RECOVERY.length}</span></summary>
       <div class="body">
-        ${r.leaks.length?`漏損：${r.leaks.join('、')}<br>`:''}
+        ${r.leaks.length?`能量小偷：${r.leaks.join('、')}<br>`:''}
         ${r.note?`反思：${escapeHtml(r.note)}`:'（無反思）'}
       </div></details>`;
   }).join('');
