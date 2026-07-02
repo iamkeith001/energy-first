@@ -7,204 +7,213 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="能量儀表板">
-<meta name="theme-color" content="#6366f1">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%236366f1'/%3E%3Cpath d='M98 34 52 100h30l-8 46 54-70H96z' fill='%23fff'/%3E%3C/svg%3E">
-<title>能量儀表板 · Energy First</title>
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#EDF0EB">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0B120F">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230B6E5F'/%3E%3Cpath d='M18 92h26l18-46 26 92 18-48h30' fill='none' stroke='%23fff' stroke-width='11' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<title>能量儀表板 · Energy Signal</title>
 <style>
   :root{
-    --bg:#eef0f8; --card:#ffffff; --text:#171a26; --muted:#6b7280; --border:#e7e9f2;
-    --primary:#6366f1; --primary-soft:#eef0ff;
-    --shadow:0 1px 2px rgba(20,23,45,.04),0 8px 24px rgba(20,23,45,.06);
-    --shadow-lg:0 14px 40px rgba(84,72,220,.16);
-    --grad:linear-gradient(135deg,#6366f1 0%,#8b5cf6 52%,#a855f7 100%);
-    --grad-soft:linear-gradient(135deg,rgba(99,102,241,.13),rgba(168,85,247,.13));
-    --body:#10b981; --focus:#3b82f6; --emotion:#f43f5e; --meaning:#f59e0b;
-    --primary-rgb:99,102,241;
+    --bg:#EDF0EB; --card:#FBFCFA; --text:#182320; --muted:#5C665F; --border:#DBE0D9;
+    --primary:#0B6E5F; --primary-soft:#DEEBE7;
+    --shadow:0 1px 2px rgba(24,35,32,.05),0 12px 30px rgba(24,35,32,.06);
+    --grid:rgba(24,35,32,.038);
+    --body:#3E9C6B; --focus:#3E6DB0; --emotion:#C24A62; --meaning:#C4872F;
+    --primary-rgb:11,110,95;
+    --f-display:"Space Grotesk",-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Segoe UI",sans-serif;
+    --f-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
   }
   html[data-theme="dark"]{
-    --bg:#0a0c12; --card:#151823; --text:#e8eaf2; --muted:#98a0b3; --border:#252938;
-    --primary:#8b93ff; --primary-soft:#20233a;
-    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 30px rgba(0,0,0,.42);
-    --shadow-lg:0 16px 44px rgba(96,84,235,.32);
-    --grad:linear-gradient(135deg,#6d74f5 0%,#9b6cf0 52%,#b06cf5 100%);
-    --grad-soft:linear-gradient(135deg,rgba(139,147,255,.16),rgba(176,108,245,.16));
-    --primary-rgb:139,147,255;
+    --bg:#0B120F; --card:#121A16; --text:#E8EEE9; --muted:#8A968F; --border:#232E28;
+    --primary:#41B7A4; --primary-soft:#12241F;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 14px 34px rgba(0,0,0,.42);
+    --grid:rgba(255,255,255,.032);
+    --body:#54B87F; --focus:#5C8BD6; --emotion:#E06A82; --meaning:#E0A34A;
+    --primary-rgb:65,183,164;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
-    font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Noto Sans TC","Segoe UI",Roboto,"Helvetica Neue",sans-serif;
-    background:var(--bg); color:var(--text); line-height:1.6; -webkit-font-smoothing:antialiased;
-    padding-bottom:calc(84px + env(safe-area-inset-bottom));
+    font-family:var(--f-display); background:var(--bg); color:var(--text);
+    line-height:1.65; -webkit-font-smoothing:antialiased;
+    padding-bottom:calc(82px + env(safe-area-inset-bottom));
   }
   body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-    background:
-      radial-gradient(900px 480px at 10% -8%, rgba(99,102,241,.18), transparent 60%),
-      radial-gradient(820px 480px at 98% -4%, rgba(244,63,94,.10), transparent 55%),
-      radial-gradient(760px 560px at 50% 112%, rgba(16,185,129,.10), transparent 60%);}
-  html[data-theme="dark"] body::before{
-    background:
-      radial-gradient(900px 480px at 10% -8%, rgba(129,140,248,.20), transparent 60%),
-      radial-gradient(820px 480px at 98% -4%, rgba(244,63,94,.12), transparent 55%),
-      radial-gradient(760px 560px at 50% 112%, rgba(16,185,129,.12), transparent 60%);}
-  .wrap{max-width:680px;margin:0 auto;padding:14px 16px}
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:27px 27px;background-position:-1px -1px}
+  .wrap{max-width:620px;margin:0 auto;padding:14px 16px}
   /* Header */
-  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 72%,transparent);backdrop-filter:blur(18px) saturate(1.5);-webkit-backdrop-filter:blur(18px) saturate(1.5);border-bottom:1px solid color-mix(in srgb,var(--border) 55%,transparent)}
-  .head{max-width:680px;margin:0 auto;padding:12px 16px calc(12px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .brand{display:flex;flex-direction:column;gap:2px;min-width:0}
-  .brand h1{font-size:18px;margin:0;font-weight:800;letter-spacing:.2px;display:flex;align-items:center;gap:9px}
-  .brand .bolt{width:30px;height:30px;border-radius:9px;background:var(--grad);display:grid;place-items:center;font-size:16px;box-shadow:0 4px 12px rgba(99,102,241,.4);flex:none}
-  .brand small{color:var(--muted);font-size:11.5px;font-weight:500}
-  .icon-btn{border:1px solid var(--border);background:var(--card);color:var(--text);width:40px;height:40px;border-radius:12px;font-size:17px;cursor:pointer;display:grid;place-items:center;flex:none;box-shadow:var(--shadow)}
+  header{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--border)}
+  .head{max-width:620px;margin:0 auto;padding:11px 16px calc(11px + env(safe-area-inset-top));display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brand{display:flex;align-items:center;gap:11px;min-width:0}
+  .sig-mark{width:34px;height:34px;border-radius:10px;background:var(--primary);display:grid;place-items:center;flex:none}
+  .sig-mark svg{width:22px;height:22px}
+  .brand-txt h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.01em}
+  .brand-txt .tag{font-family:var(--f-mono);color:var(--muted);font-size:10px;letter-spacing:.14em;text-transform:uppercase;margin-top:1px}
+  .icon-btn{border:1px solid var(--border);background:var(--card);color:var(--text);width:38px;height:38px;border-radius:11px;font-size:16px;cursor:pointer;display:grid;place-items:center;flex:none}
   .icon-btn:active{transform:scale(.94)}
-  /* Cards */
-  .card{background:var(--card);border:1px solid color-mix(in srgb,var(--border) 75%,transparent);border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-bottom:14px;position:relative}
-  .card h2{font-size:15px;margin:0 0 4px;font-weight:800}
-  .card .sub{color:var(--muted);font-size:12.5px;margin:0 0 14px}
-  .card h2 + .sub{margin-top:-2px}
-  /* Tabs / sections */
-  section.tab{display:none;animation:fade .25s ease}
-  section.tab.active{display:block}
+  /* Panels */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:17px 16px;box-shadow:var(--shadow);margin-bottom:13px}
+  .eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:500;display:flex;align-items:center;gap:8px;margin-bottom:13px}
+  .eyebrow::before{content:"";width:13px;height:2px;background:var(--primary);border-radius:2px;flex:none}
+  .eyebrow span{opacity:.55;font-size:10px;letter-spacing:.1em}
+  .sub{color:var(--muted);font-size:12.5px;margin:-6px 0 13px}
+  /* Tabs */
+  section.tab{display:none}
+  section.tab.active{display:block;animation:fade .28s ease}
   @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
   /* Bottom tabbar */
-  nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-top:1px solid color-mix(in srgb,var(--border) 60%,transparent);padding:8px 8px calc(8px + env(safe-area-inset-bottom))}
-  .tabbar-inner{max-width:680px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-  .tabbtn{border:none;background:none;color:var(--muted);padding:8px 2px 6px;border-radius:14px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;transition:color .18s,background .18s}
-  .tabbtn .ti{font-size:20px;line-height:1;transition:transform .18s}
-  .tabbtn.active{color:var(--primary);background:var(--grad-soft)}
-  .tabbtn.active .ti{transform:translateY(-1px) scale(1.06)}
-  /* Ring */
-  .ring-row{display:flex;align-items:center;gap:18px}
-  .ring{--pct:0;width:98px;height:98px;border-radius:50%;flex:none;display:grid;place-items:center;
-    background:conic-gradient(from 210deg, #6366f1, #8b5cf6 calc(var(--pct)*0.6%), #a855f7 calc(var(--pct)*1%), var(--primary-soft) 0);
-    box-shadow:0 8px 22px rgba(99,102,241,.18)}
-  .ring .inner{width:76px;height:76px;border-radius:50%;background:var(--card);display:grid;place-items:center;text-align:center}
-  .ring .num{font-size:26px;font-weight:800;line-height:1}
-  .ring .lbl{font-size:10px;color:var(--muted)}
-  .ring-msg{flex:1;min-width:0}
-  .ring-msg .big{font-weight:700;font-size:15px}
-  .ring-msg .small{color:var(--muted);font-size:12.5px}
+  nav.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:color-mix(in srgb,var(--card) 88%,transparent);backdrop-filter:blur(16px) saturate(1.3);-webkit-backdrop-filter:blur(16px) saturate(1.3);border-top:1px solid var(--border);padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+  .tabbar-inner{max-width:620px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
+  .tabbtn{position:relative;border:none;background:none;color:var(--muted);padding:9px 2px 5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;transition:color .18s}
+  .tabbtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s}
+  .tabbtn::before{content:"";position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:2.5px;background:var(--primary);border-radius:0 0 3px 3px;transition:width .22s}
+  .tabbtn.active{color:var(--primary)}
+  .tabbtn.active::before{width:26px}
+  .tabbtn.active svg{transform:translateY(-1px)}
+  /* Signal panel */
+  .signal-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+  .readout{display:flex;align-items:baseline;gap:3px}
+  .readout .num{font-family:var(--f-mono);font-size:46px;font-weight:600;line-height:.85;letter-spacing:-.02em}
+  .readout .unit{font-family:var(--f-mono);font-size:16px;color:var(--muted);font-weight:500}
+  .readout-cap{font-family:var(--f-mono);font-size:10.5px;color:var(--muted);text-align:right;line-height:1.5;max-width:52%;letter-spacing:.02em}
+  #signalChart{margin-top:8px}
+  #signalChart svg{width:100%;height:auto;display:block;overflow:visible}
+  .sig-grid{stroke:var(--border);stroke-width:1}
+  .sig-flat{stroke:var(--muted);stroke-width:2;stroke-dasharray:2 5;opacity:.6}
+  .sig-area{fill:var(--primary);opacity:.09}
+  .sig-line{stroke:var(--primary);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.1s ease .05s forwards}
+  @keyframes draw{to{stroke-dashoffset:0}}
+  .sig-dot{fill:var(--card);stroke:var(--primary);stroke-width:2.4}
+  .sig-peak{fill:none;stroke:var(--primary);stroke-width:1.4;opacity:.55}
+  .sig-peaklab{font-family:var(--f-mono);font-size:8.5px;fill:var(--primary);letter-spacing:.12em}
+  .sig-axis{font-family:var(--f-mono);font-size:9px;fill:var(--muted)}
   /* Rating */
-  .rate-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--border)}
+  .rate-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:1px solid var(--border)}
   .rate-row:first-child{border-top:none;padding-top:2px}
-  .rate-label{display:flex;align-items:center;gap:10px;min-width:0}
-  .rate-label .emoji{font-size:22px;width:26px;text-align:center}
-  .rname{font-weight:700;font-size:14px}
+  .rate-label{display:flex;align-items:center;gap:11px;min-width:0}
+  .rate-label .emoji{font-size:20px;width:24px;text-align:center;filter:saturate(.85)}
+  .rname{font-weight:600;font-size:14px}
   .rdesc{color:var(--muted);font-size:11px}
   .dots{display:flex;gap:6px;flex:none}
-  .dot{width:32px;height:32px;border-radius:10px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;transition:.12s}
+  .dot{width:32px;height:32px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--muted);font-weight:500;font-size:13px;font-family:var(--f-mono);cursor:pointer;transition:.12s}
   .dot:active{transform:scale(.9)}
   .dot.on{background:var(--c);border-color:var(--c);color:#fff}
   /* Buttons */
-  .btn{width:100%;border:none;border-radius:14px;padding:14px;font-size:15px;font-weight:700;cursor:pointer;background:var(--grad);color:#fff;transition:transform .12s,filter .12s;box-shadow:0 6px 18px rgba(99,102,241,.3)}
-  .btn:active{transform:translateY(1px) scale(.99);filter:brightness(.97)}
-  .btn.ghost{background:var(--primary-soft);color:var(--primary);box-shadow:none}
-  .btn.line{background:transparent;border:1px solid var(--border);color:var(--text);box-shadow:none}
-  .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
-  .note-input,select,input[type=text]{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:12px;padding:11px 13px;font-size:14px;font-family:inherit;margin-bottom:12px;outline:none}
-  .note-input:focus,select:focus,input[type=text]:focus{border-color:var(--primary)}
-  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5 6 8l3-3.5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
+  .btn{width:100%;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;font-family:var(--f-display);cursor:pointer;background:var(--primary);color:#fff;transition:transform .12s,filter .12s}
+  .btn:active{transform:translateY(1px);filter:brightness(.95)}
+  .btn.ghost{background:var(--primary-soft);color:var(--primary)}
+  .btn.line{background:transparent;border:1px solid var(--border);color:var(--text)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .note-input,input[type=text]{width:100%;border:1px solid var(--border);background:var(--bg);color:var(--text);border-radius:11px;padding:12px 13px;font-size:14px;font-family:inherit;margin-bottom:12px;outline:none;transition:border-color .15s,box-shadow .15s}
+  .note-input:focus,input[type=text]:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(var(--primary-rgb),.13)}
   /* Suggestion */
-  .suggest{border-radius:14px;padding:14px;border:1px solid var(--border)}
-  .suggest .stitle{font-weight:800;font-size:15px;margin-bottom:2px}
+  .suggest{border-radius:12px;padding:14px;border:1px solid var(--border);border-left:3px solid var(--primary);background:var(--bg)}
+  .suggest .stitle{font-weight:700;font-size:15px;margin-bottom:3px}
   .suggest .stext{font-size:13px;color:var(--muted);margin-bottom:10px}
   .chips{display:flex;flex-wrap:wrap;gap:7px}
-  .chip{font-size:12.5px;padding:6px 11px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-weight:600}
+  .chip{font-size:12px;padding:6px 11px;border-radius:8px;background:var(--card);border:1px solid var(--border);font-weight:500}
   /* Timer */
-  .timer-face{text-align:center;padding:6px 0 10px}
-  .timer-mode{font-size:12px;font-weight:700;color:var(--primary);letter-spacing:1px}
-  .timer-time{font-size:52px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:1px;line-height:1.1;margin:2px 0}
-  .timer-ctrl{display:flex;gap:8px}
-  .presets{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
-  .preset{font-size:12px;padding:5px 12px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-weight:600}
+  .presets{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+  .preset{font-family:var(--f-mono);font-size:12px;padding:6px 13px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-weight:500;letter-spacing:.04em}
   .preset.on{background:var(--primary-soft);color:var(--primary);border-color:transparent}
+  .timer-face{text-align:center;padding:4px 0 12px}
+  .timer-mode{font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--primary);letter-spacing:.16em;text-transform:uppercase}
+  .timer-time{font-family:var(--f-mono);font-size:54px;font-weight:500;letter-spacing:.01em;line-height:1.05;margin:4px 0}
+  .timer-ctrl{display:flex;gap:8px}
   /* Log list */
-  .log{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--border)}
+  .log{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--border)}
   .log:first-child{border-top:none}
-  .log .time{font-weight:700;font-size:13px;width:52px;flex:none;font-variant-numeric:tabular-nums}
+  .log .time{font-family:var(--f-mono);font-weight:500;font-size:13px;width:46px;flex:none}
   .log .vals{display:flex;gap:5px;flex-wrap:wrap;flex:1}
-  .vtag{font-size:11px;padding:2px 7px;border-radius:7px;font-weight:700;color:#fff}
-  .log .del{margin-left:auto;color:var(--muted);background:none;border:none;cursor:pointer;font-size:16px;padding:4px;flex:none}
-  .lognote{font-size:12px;color:var(--muted);margin-top:-4px;padding:0 0 8px 62px}
+  .vtag{font-family:var(--f-mono);font-size:11px;padding:2px 7px;border-radius:6px;font-weight:500;color:#fff}
+  .log .del{margin-left:auto;color:var(--muted);background:none;border:none;cursor:pointer;font-size:15px;padding:4px;flex:none}
+  .lognote{font-size:12px;color:var(--muted);margin:-4px 0 8px 57px}
   /* Stats */
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-  .stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
-  .stat .n{font-size:24px;font-weight:800;line-height:1}
-  .stat .l{font-size:11px;color:var(--muted);margin-top:4px}
-  /* Energy selector chips */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:13px}
+  .stat{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 8px 13px;text-align:center;box-shadow:var(--shadow)}
+  .stat .n{font-family:var(--f-mono);font-size:27px;font-weight:600;line-height:1;letter-spacing:-.01em}
+  .stat .l{font-family:var(--f-mono);font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.1em;text-transform:uppercase}
+  /* Energy selector */
   .eselect{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
-  .echip{white-space:nowrap;font-size:12.5px;padding:7px 13px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-weight:600;flex:none}
+  .echip{white-space:nowrap;font-size:12.5px;padding:6px 13px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-weight:500;flex:none}
   .echip.on{color:#fff;border-color:transparent}
   /* Heatmap */
   .heat{display:grid;grid-template-columns:30px repeat(7,minmax(0,1fr));gap:3px}
-  .hcell{border-radius:6px;min-height:36px;display:grid;place-items:center;font-size:11px;font-weight:700;font-variant-numeric:tabular-nums;overflow:hidden}
-  .hcell.head{background:transparent;color:var(--muted);font-size:11px;font-weight:600;min-height:18px}
-  .hcell.rowlab{background:transparent;color:var(--muted);font-size:10.5px;font-weight:600;justify-content:flex-end;padding-right:3px;letter-spacing:-.5px}
-  .hcell.empty{background:var(--bg);border:1px dashed var(--border);color:transparent}
-  .hcell.gold{box-shadow:0 0 0 2px var(--meaning),0 0 0 4px color-mix(in srgb,var(--meaning) 30%,transparent)}
-  .golden-note{margin-top:12px;font-size:13px;background:var(--primary-soft);color:var(--primary);border-radius:12px;padding:11px 13px;font-weight:600}
+  .hcell{border-radius:5px;min-height:35px;display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;font-weight:500;overflow:hidden}
+  .hcell.head{background:transparent;color:var(--muted);font-size:11px;min-height:18px}
+  .hcell.rowlab{background:transparent;color:var(--muted);font-size:10px;justify-content:flex-end;padding-right:3px;font-family:var(--f-display)}
+  .hcell.empty{background:var(--bg);border:1px solid var(--border);color:transparent}
+  .hcell.gold{outline:2px solid var(--primary);outline-offset:-2px;position:relative}
+  .golden-note{margin-top:13px;font-size:12.5px;background:var(--primary-soft);color:var(--primary);border-radius:10px;padding:11px 13px;font-weight:500;line-height:1.6}
   /* Trend */
   .trend{width:100%;height:120px;display:block}
-  .empty-hint{color:var(--muted);font-size:13px;text-align:center;padding:24px 8px}
-  /* Tasks */
+  .empty-hint{color:var(--muted);font-size:13px;text-align:center;padding:26px 12px;line-height:1.7}
+  /* Tasks hero */
+  .hero{background:var(--primary);border-radius:18px;padding:22px 20px;color:#fff;margin-bottom:13px;position:relative;overflow:hidden}
+  .hero-wave{position:absolute;left:0;right:0;bottom:0;width:100%;height:70px;opacity:.9}
+  .hero .eyebrow{color:rgba(255,255,255,.8);margin-bottom:12px}
+  .hero .eyebrow::before{background:rgba(255,255,255,.7)}
+  .hero-title{font-size:20px;font-weight:700;margin:0 0 9px;position:relative;line-height:1.45}
+  .hero-text{font-size:13px;opacity:.92;line-height:1.75;position:relative}
+  .hero-flow{font-family:var(--f-mono);font-size:11.5px;margin-top:15px;position:relative;letter-spacing:.02em;background:rgba(255,255,255,.16);display:inline-block;padding:7px 12px;border-radius:8px}
+  /* Segmented level control */
+  .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+  .seg button{border:1.5px solid var(--border);background:transparent;border-radius:12px;padding:11px 5px;cursor:pointer;text-align:center;transition:.15s;font-family:inherit}
+  .seg button .st{font-size:13px;font-weight:600;color:var(--text)}
+  .seg button .sd{font-family:var(--f-mono);font-size:9.5px;color:var(--muted);margin-top:3px;letter-spacing:.02em}
+  .seg button:active{transform:scale(.97)}
+  .seg button.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent)}
+  .seg button.on .st{color:var(--c)}
+  /* Task list */
+  .group-lab{font-family:var(--f-mono);font-size:11px;font-weight:500;color:var(--muted);margin:15px 0 3px;display:flex;align-items:center;gap:8px;letter-spacing:.03em}
+  .group-lab .swatch{width:8px;height:8px;border-radius:2px}
   .taskitem{display:flex;align-items:center;gap:11px;padding:11px 0;border-top:1px solid var(--border)}
   .taskitem:first-child{border-top:none}
-  .tcheck{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);background:transparent;cursor:pointer;flex:none;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800}
+  .tcheck{width:22px;height:22px;border-radius:6px;border:1.8px solid var(--border);background:transparent;cursor:pointer;flex:none;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:700}
   .tcheck.on{border-color:var(--primary);background:var(--primary)}
   .ttitle{flex:1;font-size:14px;min-width:0;word-break:break-word}
   .taskitem.done .ttitle{text-decoration:line-through;color:var(--muted)}
-  .tbadge{font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:999px;color:#fff;flex:none}
-  .tdel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;padding:4px;flex:none}
-  .group-lab{font-size:12px;font-weight:800;color:var(--muted);margin:14px 0 2px;display:flex;align-items:center;gap:7px}
-  .group-lab .swatch{width:9px;height:9px;border-radius:3px}
+  .tdel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px;flex:none}
   /* Checklist */
   .check-item{display:flex;align-items:flex-start;gap:11px;padding:11px 0;border-top:1px solid var(--border);cursor:pointer}
   .check-item:first-child{border-top:none}
-  .cbox{width:22px;height:22px;border-radius:7px;border:2px solid var(--border);flex:none;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:800;margin-top:1px}
+  .cbox{width:22px;height:22px;border-radius:6px;border:1.8px solid var(--border);flex:none;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:700;margin-top:1px}
   .check-item.on .cbox{background:var(--primary);border-color:var(--primary)}
   .check-item.leak.on .cbox{background:var(--emotion);border-color:var(--emotion)}
   .clabel{font-size:14px}
   .clabel small{display:block;color:var(--muted);font-size:11.5px}
-  /* Past reviews / details */
-  details{border:1px solid var(--border);border-radius:14px;padding:0 14px;margin-bottom:10px;background:var(--card)}
-  details summary{cursor:pointer;padding:13px 0;font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .rev-h3{font-size:13px;font-weight:600;margin:6px 0 2px;display:flex;align-items:center;gap:6px}
+  /* Details */
+  details{border:1px solid var(--border);border-radius:12px;padding:0 14px;margin-bottom:10px;background:var(--card)}
+  details summary{cursor:pointer;padding:13px 0;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:8px}
   details summary::-webkit-details-marker{display:none}
-  details summary::after{content:"⌄";color:var(--muted);font-size:18px}
-  details[open] summary::after{content:"⌃"}
-  details .body{padding:0 0 14px;font-size:13px;color:var(--muted)}
-  .mini-row{display:flex;gap:8px}
-  .mini-row .btn{padding:10px}
+  details summary::after{content:"+";color:var(--muted);font-size:17px;font-family:var(--f-mono)}
+  details[open] summary::after{content:"–"}
+  details .body{padding:0 0 14px;font-size:13px;color:var(--muted);line-height:1.7}
+  .mini-row{display:flex;gap:8px;margin-bottom:10px}
   /* Toast */
-  .toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 20px;border-radius:999px;font-size:13.5px;font-weight:600;opacity:0;transition:.3s;z-index:60;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:500;opacity:0;transition:.3s;z-index:60;pointer-events:none;box-shadow:0 10px 30px rgba(0,0,0,.22)}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .foot{text-align:center;color:var(--muted);font-size:11px;padding:8px 0 4px;line-height:1.7}
-  /* --- 視覺升級 --- */
-  .stat .n{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
-  .note-input:focus,input[type=text]:focus,select:focus{box-shadow:0 0 0 3px rgba(var(--primary-rgb),.14)}
-  .card h2{font-size:15.5px}
-  .hero{background:var(--grad);border-radius:22px;padding:22px;color:#fff;margin-bottom:14px;box-shadow:var(--shadow-lg);position:relative;overflow:hidden}
-  .hero::after{content:"";position:absolute;right:-46px;top:-46px;width:170px;height:170px;border-radius:50%;background:rgba(255,255,255,.13)}
-  .hero::before{content:"";position:absolute;left:-34px;bottom:-52px;width:130px;height:130px;border-radius:50%;background:rgba(255,255,255,.08)}
-  .hero-emoji{font-size:30px;position:relative}
-  .hero-title{font-size:21px;font-weight:800;margin:8px 0 7px;position:relative}
-  .hero-text{font-size:13.5px;opacity:.94;line-height:1.75;position:relative}
-  .hero-steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px;position:relative}
-  .hero-steps span{font-size:12px;font-weight:700;background:rgba(255,255,255,.2);padding:6px 12px;border-radius:999px}
-  .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
-  .seg button{border:1.5px solid var(--border);background:transparent;border-radius:14px;padding:11px 5px;cursor:pointer;text-align:center;transition:.15s;font-family:inherit}
-  .seg button .st{font-size:13px;font-weight:800;color:var(--text)}
-  .seg button .sd{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3}
-  .seg button:active{transform:scale(.97)}
-  .seg button.on{border-color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent)}
-  .seg button.on .st{color:var(--c)}
+  .foot{text-align:center;color:var(--muted);font-family:var(--f-mono);font-size:10px;letter-spacing:.05em;padding:6px 0 2px}
+  :focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+  @media (prefers-reduced-motion: reduce){
+    .sig-line{animation:none;stroke-dashoffset:0}
+    section.tab.active{animation:none}
+  }
 </style>
 </head>
 <body>
 <header>
   <div class="head">
     <div class="brand">
-      <h1><span class="bolt">⚡</span>能量儀表板</h1>
-      <small id="dateLabel">能量管理優先於時間管理</small>
+      <span class="sig-mark"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l2.5-7 3.5 14 2.5-7H22"/></svg></span>
+      <div class="brand-txt">
+        <h1>能量儀表板</h1>
+        <div class="tag" id="dateLabel">Energy Signal</div>
+      </div>
     </div>
     <button class="icon-btn" id="themeBtn" title="切換深淺色">🌙</button>
   </div>
@@ -212,36 +221,54 @@
 
 <main class="wrap">
 
+  <!-- ===== 任務 ===== -->
+  <section class="tab" id="tab-tasks">
+    <div class="hero" id="welcomeHero" style="display:none">
+      <svg class="hero-wave" viewBox="0 0 340 70" preserveAspectRatio="none" aria-hidden="true"><path d="M0 46 C36 20 62 22 96 40 C130 58 160 60 196 36 C230 14 262 16 300 38 C320 50 332 46 340 42" fill="none" stroke="rgba(255,255,255,.32)" stroke-width="2"/></svg>
+      <div class="eyebrow">開始 <span>START HERE</span></div>
+      <div class="hero-title">先讀懂你的能量，再安排你的一天</div>
+      <div class="hero-text">時間人人都是 24 小時，真正的差別在能量。把要做的事加進來、標好它需要多少精神，系統會在你狀態最好的時刻，提醒你做最重要的事。</div>
+      <div class="hero-flow">加任務 → 每天打卡 → 找出黃金時段</div>
+    </div>
+    <div class="card">
+      <div class="eyebrow">依能量分類 <span>TASKS</span></div>
+      <div class="sub">先標好任務要花多少能量，打卡時系統就會幫你配對（做法二）</div>
+      <input type="text" id="taskInput" placeholder="輸入一個任務…" maxlength="80">
+      <div class="seg" id="taskLevelSeg"></div>
+      <button class="btn" id="addTaskBtn">加入任務</button>
+    </div>
+    <div class="card">
+      <div class="eyebrow">任務清單 <span>QUEUE</span></div>
+      <div id="taskList"></div>
+    </div>
+  </section>
+
   <!-- ===== 打卡 ===== -->
   <section class="tab active" id="tab-checkin">
     <div class="card">
-      <div class="ring-row">
-        <div class="ring" id="compRing" style="--pct:0">
-          <div class="inner"><div><div class="num" id="compVal">–</div><div class="lbl">綜合能量</div></div></div>
-        </div>
-        <div class="ring-msg" id="ringMsg">
-          <div class="big">此刻感覺如何？</div>
-          <div class="small">花 10 秒，幫四種能量打個分。</div>
-        </div>
+      <div class="eyebrow">能量波形 <span>TODAY'S SIGNAL</span></div>
+      <div class="signal-head">
+        <div class="readout"><span class="num" id="compVal">–</span><span class="unit">/5</span></div>
+        <div class="readout-cap" id="signalCap">尚無訊號</div>
       </div>
+      <div id="signalChart"></div>
     </div>
 
     <div class="card">
-      <h2>記錄此刻能量</h2>
-      <div class="sub">1＝很低　5＝很高。誠實就好。</div>
+      <div class="eyebrow">記錄此刻 <span>CHECK-IN</span></div>
+      <div class="sub">1 很低 · 5 很高。誠實就好。</div>
       <div id="ratingWrap"></div>
       <input type="text" class="note-input" id="noteInput" placeholder="（可選）現在在做什麼／感覺是什麼？" maxlength="60">
       <button class="btn" id="saveCheckinBtn">記錄此刻</button>
     </div>
 
     <div class="card">
-      <h2>現在適合做什麼</h2>
-      <div class="sub">依你最近一次的能量狀態自動建議</div>
+      <div class="eyebrow">現在適合做什麼 <span>NOW</span></div>
       <div class="suggest" id="suggestBox"></div>
     </div>
 
     <div class="card">
-      <h2>專注節奏</h2>
+      <div class="eyebrow">專注節奏 <span>RHYTHM TIMER</span></div>
       <div class="sub">工作一段落就休息，別硬撐（做法三）</div>
       <div class="presets" id="presets">
         <button class="preset on" data-f="90" data-b="15">90 · 15</button>
@@ -249,7 +276,7 @@
         <button class="preset" data-f="25" data-b="5">25 · 5</button>
       </div>
       <div class="timer-face">
-        <div class="timer-mode" id="timerMode">專注時段</div>
+        <div class="timer-mode" id="timerMode">FOCUS</div>
         <div class="timer-time" id="timerTime">90:00</div>
       </div>
       <div class="timer-ctrl">
@@ -259,7 +286,7 @@
     </div>
 
     <div class="card">
-      <h2>今日紀錄</h2>
+      <div class="eyebrow">今日紀錄 <span>LOG</span></div>
       <div class="sub" id="todayCount">尚無紀錄</div>
       <div id="todayList"></div>
     </div>
@@ -268,13 +295,13 @@
   <!-- ===== 儀表板 ===== -->
   <section class="tab" id="tab-dashboard">
     <div class="stats">
-      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">總打卡</div></div>
-      <div class="stat"><div class="n" id="statAvg">–</div><div class="l">平均綜合</div></div>
-      <div class="stat"><div class="n" id="statStreak">0</div><div class="l">連續天數</div></div>
+      <div class="stat"><div class="n" id="statTotal">0</div><div class="l">打卡</div></div>
+      <div class="stat"><div class="n" id="statAvg">–</div><div class="l">平均</div></div>
+      <div class="stat"><div class="n" id="statStreak">0</div><div class="l">連續天</div></div>
     </div>
 
     <div class="card">
-      <h2>你的能量節律</h2>
+      <div class="eyebrow">能量節律 <span>RHYTHM MAP</span></div>
       <div class="sub">時段 × 星期的平均能量，找出屬於你的黃金時段</div>
       <div class="eselect" id="energySelect"></div>
       <div class="heat" id="heatmap"></div>
@@ -282,15 +309,15 @@
     </div>
 
     <div class="card">
-      <h2>近 14 天趨勢</h2>
+      <div class="eyebrow">近 14 天趨勢 <span>TREND</span></div>
       <div class="sub">每日綜合能量平均</div>
       <div id="trendWrap"></div>
     </div>
 
     <div class="card">
-      <h2>備份與還原</h2>
-      <div class="sub">資料只存在這台裝置。建議偶爾下載備份,換手機或清除瀏覽器時才不會不見。</div>
-      <div class="mini-row" style="margin-bottom:10px">
+      <div class="eyebrow">備份與還原 <span>BACKUP</span></div>
+      <div class="sub">資料只存在這台裝置。建議偶爾下載備份，換手機或清除瀏覽器時才不會不見。</div>
+      <div class="mini-row">
         <button class="btn ghost" id="exportBtn">下載備份</button>
         <button class="btn line" id="importBtn">讀取備份</button>
       </div>
@@ -299,35 +326,14 @@
     </div>
   </section>
 
-  <!-- ===== 任務 ===== -->
-  <section class="tab" id="tab-tasks">
-    <div class="hero" id="welcomeHero" style="display:none">
-      <div class="hero-emoji">⚡</div>
-      <div class="hero-title">歡迎使用能量儀表板</div>
-      <div class="hero-text">與其管理時間，不如管理能量。先把要做的事加進來、標好它需要多少精神，系統就會在對的時刻，提醒你做對的事。</div>
-      <div class="hero-steps"><span>① 加任務</span><span>② 每天打卡</span><span>③ 找出黃金時段</span></div>
-    </div>
-    <div class="card">
-      <h2>依能量分類任務</h2>
-      <div class="sub">先標好任務要花多少能量，打卡時系統就會幫你配對（做法二）</div>
-      <input type="text" id="taskInput" placeholder="輸入一個任務…" maxlength="80">
-      <div class="seg" id="taskLevelSeg"></div>
-      <button class="btn" id="addTaskBtn">加入任務</button>
-    </div>
-    <div class="card">
-      <h2>任務清單</h2>
-      <div id="taskList"></div>
-    </div>
-  </section>
-
   <!-- ===== 檢討 ===== -->
   <section class="tab" id="tab-review">
     <div class="card">
-      <h2>本週檢討</h2>
+      <div class="eyebrow">本週檢討 <span>REVIEW</span></div>
       <div class="sub" id="weekLabel"></div>
-      <h3 style="font-size:13px;margin:6px 0 2px">✅ 恢復節奏（做法三）</h3>
+      <div class="rev-h3">✅ 恢復節奏（做法三）</div>
       <div id="recoveryList"></div>
-      <h3 style="font-size:13px;margin:16px 0 2px">⚠️ 這週的能量小偷（做法四）</h3>
+      <div class="rev-h3" style="margin-top:16px">⚠️ 這週的能量小偷（做法四）</div>
       <div class="sub" style="margin:0 0 6px">勾選這週偷走你能量的來源</div>
       <div id="leakList"></div>
       <input type="text" id="reviewNote" placeholder="本週反思：哪個時段狀態最好？下週想調整什麼？" maxlength="120" style="margin-top:14px">
@@ -335,19 +341,20 @@
       <button class="btn ghost" id="copyMdBtn" style="margin-top:8px">複製本週摘要（貼到筆記）</button>
     </div>
     <div class="card">
-      <h2>過往檢討</h2>
+      <div class="eyebrow">過往檢討 <span>HISTORY</span></div>
       <div id="pastReviews"><div class="empty-hint">還沒有紀錄</div></div>
     </div>
   </section>
 
+  <div class="foot">ENERGY MANAGEMENT OVER TIME MANAGEMENT</div>
 </main>
 
 <nav class="tabbar">
   <div class="tabbar-inner">
-    <button class="tabbtn" data-tab="tasks"><span class="ti">✓</span>任務</button>
-    <button class="tabbtn active" data-tab="checkin"><span class="ti">⚡</span>打卡</button>
-    <button class="tabbtn" data-tab="dashboard"><span class="ti">📊</span>儀表板</button>
-    <button class="tabbtn" data-tab="review"><span class="ti">🗓️</span>檢討</button>
+    <button class="tabbtn" data-tab="tasks"><svg viewBox="0 0 24 24"><path d="M4 7h9M4 12h8M4 17h6"/><path d="M15.5 15.5l2 2 4-4.5"/></svg>任務</button>
+    <button class="tabbtn active" data-tab="checkin"><svg viewBox="0 0 24 24"><path d="M2 12h4l2.5-7 3.5 14 2.5-7H22"/></svg>打卡</button>
+    <button class="tabbtn" data-tab="dashboard"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.3"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.3"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.3"/></svg>儀表板</button>
+    <button class="tabbtn" data-tab="review"><svg viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="16" rx="2.2"/><path d="M3.5 9h17M8 3v3M16 3v3"/></svg>檢討</button>
   </div>
 </nav>
 
@@ -357,15 +364,15 @@
 "use strict";
 /* ============ 設定 ============ */
 const ENERGIES = [
-  {key:'body',    label:'身體', emoji:'💪', color:'#10b981', desc:'睡眠·營養·運動·休息'},
-  {key:'focus',   label:'專注', emoji:'🎯', color:'#3b82f6', desc:'注意力·思考·深度工作'},
-  {key:'emotion', label:'情緒', emoji:'❤️', color:'#f43f5e', desc:'壓力·心情·人際'},
-  {key:'meaning', label:'意義', emoji:'⭐', color:'#f59e0b', desc:'目標感·價值感'},
+  {key:'body',    label:'身體', emoji:'💪', color:'#3E9C6B', desc:'睡眠·營養·運動·休息'},
+  {key:'focus',   label:'專注', emoji:'🎯', color:'#3E6DB0', desc:'注意力·思考·深度工作'},
+  {key:'emotion', label:'情緒', emoji:'❤️', color:'#C24A62', desc:'壓力·心情·人際'},
+  {key:'meaning', label:'意義', emoji:'⭐', color:'#C4872F', desc:'目標感·價值感'},
 ];
 const LEVELS = [
-  {key:'high', label:'高能量 · 深度工作', color:'#8b5cf6', hint:'研究設計、論文寫作、簡報架構、策略思考、困難分析'},
-  {key:'mid',  label:'中等能量 · 推進',   color:'#3b82f6', hint:'規劃、溝通協調、一般會議'},
-  {key:'low',  label:'低能量 · 雜務',     color:'#64748b', hint:'Email、行政流程、資料整理、例行回覆'},
+  {key:'high', label:'高能量 · 深度工作', color:'#0B6E5F', hint:'研究設計、論文寫作、簡報架構、策略思考、困難分析'},
+  {key:'mid',  label:'中等能量 · 推進',   color:'#3E6DB0', hint:'規劃、溝通協調、一般會議'},
+  {key:'low',  label:'低能量 · 雜務',     color:'#8A9690', hint:'Email、行政流程、資料整理、例行回覆'},
 ];
 const BUCKETS = [
   {key:'dawn', label:'清晨', hint:'5–8'},
@@ -395,20 +402,21 @@ const DB = {
 };
 let checkins = DB.get('checkins', []);
 let tasks    = DB.get('tasks', []);
-let reviews  = DB.get('reviews', {});   // keyed by week start ymd
+let reviews  = DB.get('reviews', {});
 
 /* ============ 工具 ============ */
 const $ = s => document.querySelector(s);
 const pad = n => String(n).padStart(2,'0');
 function ymd(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-function wdIndex(d){ return (d.getDay()+6)%7; } // 0=一 … 6=日
+function wdIndex(d){ return (d.getDay()+6)%7; }
 function mondayOf(d){ const x=new Date(d); x.setDate(x.getDate()-wdIndex(x)); x.setHours(0,0,0,0); return x; }
 function composite(c){ return (c.body+c.focus+c.emotion+c.meaning)/4; }
 function hexToRgb(h){ const n=parseInt(h.slice(1),16); return [n>>16&255,n>>8&255,n&255]; }
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),1800); }
 function fmtTime(ts){ const d=new Date(ts); return pad(d.getHours())+':'+pad(d.getMinutes()); }
+function escapeHtml(s){ return s.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
-/* ============ 打卡分頁 ============ */
+/* ============ 打卡：能量波形 ============ */
 let draft = {body:0,focus:0,emotion:0,meaning:0};
 
 function renderRating(){
@@ -429,14 +437,47 @@ function paintDraft(){
     row.querySelectorAll('.dot').forEach(d=>d.classList.toggle('on', +d.dataset.val<=v && v>0));
   });
   const rated = ENERGIES.map(e=>draft[e.key]).filter(v=>v>0);
-  const avg = rated.length ? rated.reduce((a,b)=>a+b,0)/rated.length : 0;
-  setRing($('#compRing'), $('#compVal'), avg, rated.length? avg.toFixed(1):'–');
+  if(rated.length){ $('#compVal').textContent=(rated.reduce((a,b)=>a+b,0)/rated.length).toFixed(1); $('#signalCap').textContent='評分中…'; }
+  else renderSignal();
 }
-function setRing(ring, valEl, avg, text){
-  ring.style.setProperty('--pct', avg/5*100);
-  valEl.textContent = text;
+function smoothPath(p){
+  if(!p.length) return '';
+  if(p.length===1) return `M${p[0].x.toFixed(1)},${p[0].y.toFixed(1)}`;
+  let d=`M${p[0].x.toFixed(1)},${p[0].y.toFixed(1)}`;
+  for(let i=0;i<p.length-1;i++){
+    const p0=p[i-1]||p[i], p1=p[i], p2=p[i+1], p3=p[i+2]||p2;
+    const c1x=p1.x+(p2.x-p0.x)/6, c1y=p1.y+(p2.y-p0.y)/6;
+    const c2x=p2.x-(p3.x-p1.x)/6, c2y=p2.y-(p3.y-p1.y)/6;
+    d+=` C${c1x.toFixed(1)},${c1y.toFixed(1)} ${c2x.toFixed(1)},${c2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+  }
+  return d;
 }
-$('#ratingWrap')?.addEventListener('click', e=>{
+function signalSVG(list){
+  const W=340,H=132,pl=12,pr=12,pt=16,pb=22;
+  const x=h=>pl+(Math.max(5,Math.min(24,h))-5)/19*(W-pl-pr);
+  const y=v=>(H-pb)-((v-1)/4)*(H-pt-pb);
+  let grid=''; [1,2,3,4,5].forEach(v=>{ grid+=`<line x1="${pl}" y1="${y(v).toFixed(1)}" x2="${W-pr}" y2="${y(v).toFixed(1)}" class="sig-grid"/>`; });
+  let axis=''; [6,9,12,15,18,21].forEach(h=>{ axis+=`<text x="${x(h).toFixed(1)}" y="${H-6}" class="sig-axis" text-anchor="middle">${pad(h)}</text>`; });
+  if(!list.length){
+    const yb=y(3).toFixed(1);
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="尚無訊號">${grid}<line x1="${pl}" y1="${yb}" x2="${W-pr}" y2="${yb}" class="sig-flat"/>${axis}</svg>`;
+  }
+  const pts=list.map(c=>{ const d=new Date(c.ts); return {x:x(d.getHours()+d.getMinutes()/60), y:y(composite(c)), v:composite(c)}; });
+  const dLine=smoothPath(pts);
+  const dArea=dLine+` L${pts[pts.length-1].x.toFixed(1)},${H-pb} L${pts[0].x.toFixed(1)},${H-pb} Z`;
+  const dots=pts.map(p=>`<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.2" class="sig-dot"/>`).join('');
+  let peak=''; if(pts.length>=2){ const mx=pts.reduce((a,b)=>b.v>a.v?b:a); peak=`<circle cx="${mx.x.toFixed(1)}" cy="${mx.y.toFixed(1)}" r="6.5" class="sig-peak"/><text x="${mx.x.toFixed(1)}" y="${(mx.y-12).toFixed(1)}" class="sig-peaklab" text-anchor="middle">PEAK</text>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="今日能量波形">${grid}<path d="${dArea}" class="sig-area"/><path d="${dLine}" class="sig-line" pathLength="1"/>${dots}${peak}${axis}</svg>`;
+}
+function renderSignal(){
+  const today=ymd(new Date());
+  const todays=checkins.filter(c=>ymd(new Date(c.ts))===today).sort((a,b)=>a.ts-b.ts);
+  const val=$('#compVal'), cap=$('#signalCap');
+  if(todays.length){ val.textContent=composite(todays[todays.length-1]).toFixed(1); cap.textContent=`今日 ${todays.length} 次 · 最近 ${fmtTime(todays[todays.length-1].ts)}`; }
+  else { val.textContent='–'; cap.textContent='尚無訊號 — 記錄第一筆'; }
+  $('#signalChart').innerHTML=signalSVG(todays);
+}
+$('#ratingWrap').addEventListener('click', e=>{
   const dot=e.target.closest('.dot'); if(!dot) return;
   const k=dot.closest('.dots').dataset.energy;
   draft[k] = +dot.dataset.val;
@@ -448,7 +489,7 @@ $('#saveCheckinBtn').addEventListener('click', ()=>{
   checkins.push({id:now, ts:now, body:draft.body, focus:draft.focus, emotion:draft.emotion, meaning:draft.meaning, note:$('#noteInput').value.trim()});
   DB.set('checkins', checkins);
   draft={body:0,focus:0,emotion:0,meaning:0}; $('#noteInput').value='';
-  paintDraft(); renderToday(); renderSuggest();
+  paintDraft(); renderSignal(); renderToday(); renderSuggest();
   toast('已記錄 ✓');
 });
 
@@ -467,14 +508,14 @@ function renderToday(){
 $('#todayList').addEventListener('click', e=>{
   const b=e.target.closest('.del'); if(!b) return;
   checkins = checkins.filter(c=>c.id!=b.dataset.id);
-  DB.set('checkins', checkins); renderToday(); renderSuggest();
+  DB.set('checkins', checkins); renderToday(); renderSignal(); renderSuggest();
 });
-function escapeHtml(s){ return s.replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 
 function renderSuggest(){
   const box=$('#suggestBox');
   if(!checkins.length){
-    box.innerHTML=`<div class="stitle">還沒有資料</div><div class="stext">先在上面記錄此刻能量，系統就會告訴你現在適合做什麼。</div>`;
+    box.style.borderLeftColor='var(--muted)';
+    box.innerHTML=`<div class="stitle">還沒有訊號</div><div class="stext">在上面記錄此刻能量，系統就會告訴你現在適合做什麼。</div>`;
     return;
   }
   const latest = checkins[checkins.length-1];
@@ -487,18 +528,18 @@ function renderSuggest(){
   const matched = tasks.filter(t=>!t.done && t.level===level);
   const chips = matched.length
     ? `<div class="chips">${matched.slice(0,6).map(t=>`<span class="chip">${escapeHtml(t.title)}</span>`).join('')}</div>`
-    : `<div class="stext" style="margin:0">此類別還沒有待辦任務。到「任務」分頁加幾個吧。</div>`;
-  const stamp = isToday? `最近打卡 ${fmtTime(latest.ts)}（綜合 ${avg.toFixed(1)}）` : `⚠️ 這是${ymd(new Date(latest.ts))}的舊紀錄，建議重新打卡`;
+    : `<div class="stext" style="margin:0">此類別還沒有待辦任務。到「任務」加幾個吧。</div>`;
+  const stamp = isToday? `最近打卡 ${fmtTime(latest.ts)} · 綜合 ${avg.toFixed(1)}` : `⚠️ 這是 ${ymd(new Date(latest.ts))} 的舊紀錄，建議重新打卡`;
   const lv = LEVELS.find(l=>l.key===level);
-  box.style.borderLeft = `4px solid ${lv.color}`;
-  box.innerHTML = `<div class="stitle">${title}</div><div class="stext">${text}</div>${chips}<div class="stext" style="margin:10px 0 0;font-size:11.5px">${stamp}</div>`;
+  box.style.borderLeftColor = lv.color;
+  box.innerHTML = `<div class="stitle">${title}</div><div class="stext">${text}</div>${chips}<div class="stext" style="margin:10px 0 0;font-family:var(--f-mono);font-size:11px">${stamp}</div>`;
 }
 
 /* ============ 專注節奏計時器 ============ */
 let timer = {focusMin:90, breakMin:15, mode:'focus', remain:90*60, running:false, iv:null};
 function timerRender(){
   $('#timerTime').textContent = pad(Math.floor(timer.remain/60))+':'+pad(timer.remain%60);
-  $('#timerMode').textContent = timer.mode==='focus'?'專注時段':'休息時段';
+  $('#timerMode').textContent = timer.mode==='focus'?'FOCUS · 專注':'BREAK · 休息';
   $('#timerMode').style.color = timer.mode==='focus'?'var(--primary)':'var(--body)';
   $('#timerStart').textContent = timer.running?'暫停':'開始';
 }
@@ -530,7 +571,7 @@ $('#presets').addEventListener('click', e=>{
 /* ============ 儀表板 ============ */
 let selEnergy = 'comp';
 function renderEnergySelect(){
-  const opts = [{key:'comp',label:'綜合',color:'#6366f1'}, ...ENERGIES.map(e=>({key:e.key,label:e.label,color:e.color}))];
+  const opts = [{key:'comp',label:'綜合',color:'#0B6E5F'}, ...ENERGIES.map(e=>({key:e.key,label:e.label,color:e.color}))];
   $('#energySelect').innerHTML = opts.map(o=>`<button class="echip ${o.key===selEnergy?'on':''}" data-k="${o.key}" style="${o.key===selEnergy?`background:${o.color}`:''}">${o.label}</button>`).join('');
 }
 $('#energySelect').addEventListener('click', e=>{
@@ -538,24 +579,22 @@ $('#energySelect').addEventListener('click', e=>{
   selEnergy=b.dataset.k; renderEnergySelect(); renderHeatmap();
 });
 function valOf(c){ return selEnergy==='comp'? composite(c) : c[selEnergy]; }
-function selColor(){ return selEnergy==='comp'? '#6366f1' : ENERGIES.find(e=>e.key===selEnergy).color; }
+function selColor(){ return selEnergy==='comp'? '#0B6E5F' : ENERGIES.find(e=>e.key===selEnergy).color; }
 
 function renderStats(){
   $('#statTotal').textContent = checkins.length;
   $('#statAvg').textContent = checkins.length ? (checkins.reduce((a,c)=>a+composite(c),0)/checkins.length).toFixed(1) : '–';
-  // streak
   const days = new Set(checkins.map(c=>ymd(new Date(c.ts))));
   let streak=0; const d=new Date();
-  if(!days.has(ymd(d))) d.setDate(d.getDate()-1); // 今天沒打卡就從昨天算
+  if(!days.has(ymd(d))) d.setDate(d.getDate()-1);
   while(days.has(ymd(d))){ streak++; d.setDate(d.getDate()-1); }
   $('#statStreak').textContent = streak;
 }
 function renderHeatmap(){
-  const grid = {}; // bucket -> wd -> [vals]
+  const grid = {};
   BUCKETS.forEach(b=>{ grid[b.key]={}; for(let w=0;w<7;w++) grid[b.key][w]=[]; });
   checkins.forEach(c=>{ const d=new Date(c.ts); grid[bucketOfHour(d.getHours())][wdIndex(d)].push(valOf(c)); });
   const avgOf = arr => arr.length? arr.reduce((a,b)=>a+b,0)/arr.length : null;
-  // find max
   let max=-1, best=null;
   BUCKETS.forEach(b=>{ for(let w=0;w<7;w++){ const a=avgOf(grid[b.key][w]); if(a!=null&&a>max){max=a;best={b:b.key,w}} } });
   const [r,g,bl]=hexToRgb(selColor());
@@ -565,7 +604,7 @@ function renderHeatmap(){
     for(let w=0; w<7; w++){
       const a=avgOf(grid[b.key][w]);
       if(a==null){ html+=`<div class="hcell empty">·</div>`; continue; }
-      const alpha=(0.18+(a-1)/4*0.82).toFixed(2);
+      const alpha=(0.16+(a-1)/4*0.84).toFixed(2);
       const gold = best && best.b===b.key && best.w===w && max>=3.5;
       const txtCol = alpha>0.55?'#fff':'var(--text)';
       html += `<div class="hcell ${gold?'gold':''}" style="background:rgba(${r},${g},${bl},${alpha});color:${txtCol}">${a.toFixed(1)}</div>`;
@@ -576,7 +615,7 @@ function renderHeatmap(){
   if(best && max>=3.5){
     const bl2=BUCKETS.find(x=>x.key===best.b);
     note.style.display='block';
-    note.textContent = `✨ 你的黃金時段：星期${WEEKDAYS[best.w]}的${bl2.label}（${bl2.hint}點）— 把最重要的事排在這裡。`;
+    note.textContent = `✦ 你的黃金時段：星期${WEEKDAYS[best.w]}的${bl2.label}（${bl2.hint}點）— 把最重要的事排在這裡。`;
   } else if(checkins.length<3){
     note.style.display='block'; note.textContent='多打幾次卡（不同時段），黃金時段就會浮現。';
   } else { note.style.display='none'; }
@@ -592,7 +631,7 @@ function renderTrend(){
   const x=i=>padX+(i/13)*(W-padX*2);
   const y=v=>H-padY-((v-1)/4)*(H-padY*2);
   const line=pts.map(p=>`${x(p.i).toFixed(1)},${y(p.v).toFixed(1)}`).join(' ');
-  const dots=pts.map(p=>`<circle cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="3.5" fill="var(--primary)"/>`).join('');
+  const dots=pts.map(p=>`<circle cx="${x(p.i).toFixed(1)}" cy="${y(p.v).toFixed(1)}" r="3.2" fill="var(--primary)"/>`).join('');
   const grid=[1,2,3,4,5].map(v=>`<line x1="${padX}" x2="${W-padX}" y1="${y(v)}" y2="${y(v)}" stroke="var(--border)" stroke-width="1"/>`).join('');
   wrap.innerHTML=`<svg class="trend" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${grid}<polyline points="${line}" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>${dots}</svg>`;
 }
@@ -621,7 +660,7 @@ function renderTasks(){
   LEVELS.forEach(l=>{
     const items=tasks.filter(t=>t.level===l.key);
     if(!items.length) return;
-    html+=`<div class="group-lab"><span class="swatch" style="background:${l.color}"></span>${l.label}　<span style="color:var(--muted);font-weight:500">${l.hint}</span></div>`;
+    html+=`<div class="group-lab"><span class="swatch" style="background:${l.color}"></span>${l.label}　${l.hint}</div>`;
     items.sort((a,b)=>a.done-b.done);
     items.forEach(t=>{
       html+=`<div class="taskitem ${t.done?'done':''}">
@@ -690,7 +729,7 @@ function renderPast(){
   if(!keys.length){ box.innerHTML=`<div class="empty-hint">還沒有紀錄</div>`; return; }
   box.innerHTML=keys.map(k=>{
     const r=reviews[k]; const rec=r.recovery.filter(Boolean).length;
-    return `<details><summary>${k} · ${weekRange(k)}<span style="color:var(--muted);font-weight:500;font-size:12px">恢復 ${rec}/${RECOVERY.length}</span></summary>
+    return `<details><summary><span>${k} · ${weekRange(k)}</span><span style="color:var(--muted);font-weight:500;font-family:var(--f-mono);font-size:11px">${rec}/${RECOVERY.length}</span></summary>
       <div class="body">
         ${r.leaks.length?`能量小偷：${r.leaks.join('、')}<br>`:''}
         ${r.note?`反思：${escapeHtml(r.note)}`:'（無反思）'}
@@ -730,6 +769,7 @@ $('#resetBtn').addEventListener('click', ()=>{
 function showTab(name){
   document.querySelectorAll('.tabbtn').forEach(x=>x.classList.toggle('active', x.dataset.tab===name));
   document.querySelectorAll('section.tab').forEach(s=>s.classList.toggle('active', s.id==='tab-'+name));
+  if(name==='checkin') renderSignal();
   if(name==='dashboard') renderDashboard();
   if(name==='review'){ curWeek=ymd(mondayOf(new Date())); renderReview(); }
   window.scrollTo(0,0);
@@ -744,17 +784,15 @@ function applyTheme(t){ document.documentElement.setAttribute('data-theme',t); $
 $('#themeBtn').addEventListener('click', ()=>applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark'));
 
 /* ============ 初始化 ============ */
-function renderAll(){ renderToday(); renderSuggest(); renderTasks(); renderDashboard(); renderReview(); }
+function renderAll(){ renderSignal(); renderToday(); renderSuggest(); renderTasks(); renderDashboard(); renderReview(); }
 function init(){
   const savedTheme=DB.get('theme', matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');
   applyTheme(savedTheme);
   const now=new Date();
-  $('#dateLabel').textContent = `${now.getMonth()+1}月${now.getDate()}日 星期${WEEKDAYS[wdIndex(now)]} · 能量優先於時間`;
-  renderRating(); paintDraft();
-  renderLevelSeg();
-  timerRender();
+  $('#dateLabel').textContent = `${now.getMonth()+1}月${now.getDate()}日 · 週${WEEKDAYS[wdIndex(now)]}`;
+  renderRating(); renderLevelSeg(); timerRender();
   renderAll();
-  // 聰明落點:第一次(尚無打卡資料)開在「任務」流程起點;之後每天開在「打卡」
+  paintDraft();
   showTab(checkins.length===0 ? 'tasks' : 'checkin');
 }
 init();
