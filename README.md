@@ -68,4 +68,7 @@ python3 -m http.server 4177
 
 ---
 
+*系列入口：[提升生產力系統](https://iamkeith001.github.io/productivity-systems/)*
+*同系列工具：[腦袋清空站 · Mind Offload](https://iamkeith001.github.io/mind-offload/) · [選擇迴圈 · Choice Loop](https://iamkeith001.github.io/choice-loop/)*
+
 *理論來源:《能量管理優先於時間管理 · Energy Management over Time Management》*
